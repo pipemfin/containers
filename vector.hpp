@@ -3,15 +3,16 @@
 
 #include <stddef.h>
 #include <memory>
+#include <cmath>
 namespace ft {
 
     template<typename T, class allocator_type = std::allocator<T> >
     class vector{
     private:
-        size_t sz;
-        size_t cpcty;
-        T* ptr;
-        allocator_type alloc;
+        size_t          sz;
+        size_t          cpcty;
+        T*              ptr;
+        allocator_type  alloc;
 
     public:
         vector (const allocator_type& alloc = allocator_type()) {
@@ -39,7 +40,7 @@ namespace ft {
         }
 
         size_t max_size() const{
-            return 100;
+            return std::pow(2, (64-sizeof(T))) - 1;
         }
 
         size_t capacity() const {
@@ -62,20 +63,31 @@ namespace ft {
         }
 
         void resize (size_t n, T val = T()) {
-            if (n < this->sz)
-                for(; this->sz > n;--(this->sz))
-                    ptr[sz]->~T();
-            else if (n > this->sz and n > this->cpcty) {
+            if (n < this->sz) {
+                for (size_t tmp = this->sz; tmp > n; --tmp)
+                    alloc.destroy(ptr[sizeof(T) * tmp]);
+                this->sz = n;
+            }
+            else if (n > this->cpcty) {
+                reserve(n);
             }
             else if (n > this->sz)
                 for(; this->sz < n;++(this->sz))
-                    ptr[sz - 1] = T();
+                    ptr[sz - 1] = T(val);
         }
 
         bool empty() const {
             if (this->sz == 0)
                 return true;
             return false;
+        }
+
+        & operator[] (size_t n) {
+            return ptr[sizeof(T) * n];
+        }
+
+        const &T operator[] (size_t n) {
+            return ptr[sizeof(T) * n];
         }
 
         ~vector() {};
