@@ -1,0 +1,4 @@
+#ifndef ITERATOR_HPP
+#define ITERATOR_HPP
+
+#endif //CONTAINERS_ITERATOR_HPP

@@ -1,6 +1,6 @@
 #include <iostream>
 #include "vector.hpp"
-//#include <vector>
+#include "stack.hpp"
 
 //int main(int argc, char** argv)
 //{
@@ -29,34 +29,43 @@
 //    return (0);
 //}
 
-int main(int argc, char** argv)
-{
-    (void)argc;
-    (void)argv;
-    ft::vector<int> abc(9, 5);
-
-
-    std::cout << "size:" << abc.size() << " ,capacity:" << abc.capacity() << std::endl;
-    for(int i = 0; i < 9; ++i)
-        std::cout << abc[i] << std::endl;
-    abc.push_back(10);
-    std::cout << "size:" << abc.size() << " ,capacity:" << abc.capacity() << std::endl;
-    abc.push_back(10);
-    std::cout << "size:" << abc.size() << " ,capacity:" << abc.capacity() << std::endl;
-    std::cout << abc[8] << std::endl;
-    std::cout << "size:" << abc.size() << " ,capacity:" << abc.capacity() << std::endl;
+//int main(int argc, char** argv)
+//{
+//    (void)argc;
+//    (void)argv;
+//    ft::vector<int> abc(2);
+//
+////    std::cout << "size:" << abc.size() << " ,capacity:" << abc.capacity() << std::endl;
+////    for(int i = 0; i < 9; ++i)
+////        std::cout << "i = |" << i << "|, value:" << abc[i] << std::endl;
+////    std::cout << "Bullshit" << std::endl;
+//    std::cout << "size:" << abc.size() << " ,capacity:" << abc.capacity() << std::endl;
 //    abc.pop_back();
 //    std::cout << "size:" << abc.size() << " ,capacity:" << abc.capacity() << std::endl;
-    return (0);
-}
+//    abc.pop_back();
+//    std::cout << "size:" << abc.size() << " ,capacity:" << abc.capacity() << std::endl;
+//    abc.push_back(10);
+//    abc.push_back(10);
+//    std::cout << "size:" << abc.size() << " ,capacity:" << abc.capacity() << std::endl;
+//    std::cout << "Bullshit" << std::endl;
+//    std::cout << "size:" << abc.size() << " ,capacity:" << abc.capacity() << std::endl;
+//    abc.push_back(10);
+//    std::cout << "size:" << abc.size() << " ,capacity:" << abc.capacity() << std::endl;
+//    std::cout << abc[8] << std::endl;
+//    std::cout << "size:" << abc.size() << " ,capacity:" << abc.capacity() << std::endl;
+//    abc.pop_back();
+//    std::cout << "size:" << abc.size() << " ,capacity:" << abc.capacity() << std::endl;
+//    return (0);
+//}
 
 //int main(int argc, char** argv)
 //{
 //    (void)argc;
 //    (void)argv;
-//    ft::vector<int> abc;
+//    std::vector<int> abc(10, 5);
 //
-//    std::cout << "size:" << abc.size() << " ,capacity:" << abc.capacity() << std::endl;
+//    std::cout << *abc.end() << std::endl;
+////    std::cout << "size:" << abc.size() << " ,capacity:" << abc.capacity() << std::endl;
 //
 ////    for(int i = 0; i < 10; ++i){
 ////        abc.push_back(i);
@@ -65,3 +74,25 @@ int main(int argc, char** argv)
 //
 //    return (0);
 //}
+
+int main(int argc, char** argv)
+{
+    (void)argc;
+    (void)argv;
+    ft::stack<int> mystack;
+    ft::stack<int> mystack2;
+
+    std::cout << mystack.empty() << std::endl;
+    std::cout << mystack.size() << std::endl;
+    mystack.push(10);
+    std::cout << mystack.size() << std::endl;
+    std::cout << mystack.empty() << std::endl;
+
+    std::cout << mystack.top() << std::endl;
+//    mystack.pop();
+//    std::cout << mystack.size() << std::endl;
+
+    bool a = mystack==mystack2;
+    std::cout << a << std::endl;
+    return (0);
+}
