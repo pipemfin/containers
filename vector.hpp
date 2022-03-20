@@ -5,87 +5,120 @@
 #include <memory>
 #include <cmath>
 #include <iostream>
-#include <iterator>
+#include <stdexcept>
+#include "vector_iterator.hpp"
 
 namespace ft {
 
     template<typename T, class allocator_type = std::allocator<T> >
     class vector{
-
     private:
-        size_t                  sz;
-        size_t                  cpcty;
-        T*                      ptr;
-        allocator_type          alloc;
+        size_t                             _sz;
+        size_t                             _cpcty;
+        T*                                 _ptr;
+        allocator_type                     _alloc;
 
     public:
+        typedef typename ft::RandIt<T>              iterator;
+        typedef const typename ft::RandIt<T>        const_iterator;
 
-        class MyIterator : public std::iterator<std::random_access_iterator_tag, T>
-        {
-        private:
-            T*                      p;
-        public:
-            MyIterator(int* x) :p(x) {}
-            MyIterator(const MyIterator& mit) : p(mit.p) {}
-            MyIterator& operator++() {++p;return *this;}
-            MyIterator operator++(int) {MyIterator tmp(*this); operator++(); return tmp;}
-            bool operator==(const MyIterator& rhs) const {return p==rhs.p;}
-            bool operator!=(const MyIterator& rhs) const {return p!=rhs.p;}
-            int& operator*() {return *p;}
-        };
-
-        vector (const allocator_type& alloc = allocator_type()) : alloc(alloc){
-            this->sz = 0;
-            this->cpcty = 0;
-            this->ptr = NULL;
-            this->alloc = alloc;
+        vector (const allocator_type& alloc = allocator_type()) {
+            _sz = 0;
+            _cpcty = 0;
+            _ptr = NULL;
+            _alloc = alloc;
         }
 
-        vector (size_t n, const T& val = T(), const allocator_type& alloc = allocator_type()){// : alloc(alloc){
-            this->sz = n;
-            this->cpcty = n;
-            this->alloc = alloc;
-            this->ptr = this->alloc.allocate(n);
-            for (size_t cnt = 0; cnt < sz; cnt++) {
-                this->alloc.construct(&this->ptr[sizeof(T) * cnt], val);
+        vector (size_t n, const T& val = T(), const allocator_type& alloc = allocator_type()){
+            _sz = n;
+            _cpcty = n;
+            _alloc = alloc;
+            _ptr = _alloc.allocate(n);
+            for (size_t cnt = 0; cnt < _sz; cnt++) {
+                _alloc.construct(&_ptr[cnt], val);
+            }
+        }
+//
+//        template <class InputIterator>
+//        vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) {
+//            size_t n = last - first;
+//            _sz = n;
+//            _cpcty = n;
+//            _alloc = alloc;
+//            _ptr = _alloc.allocate(n);
+//            for (size_t cnt = 0; cnt < _sz; cnt++) {
+//                _alloc.construct(&_ptr[cnt], first[cnt]);
+//            }
+//        }
+
+        vector (const vector& x) {
+            _alloc = x.get_allocator();
+            _sz = x.size();
+            _cpcty = x.capacity();
+            _ptr = _alloc.allocate(_cpcty);
+            for (size_t cnt = 0; cnt < _sz; cnt++) {
+                _alloc.construct(&_ptr[cnt], x[cnt]);
             }
         }
 
-//        template <class InputIterator>
-//                vector (InputIterator first, InputIterator last,
-//                        const allocator_type& alloc = allocator_type());
+        void clear() {
+            if (_sz > 0) {
+                for (; _sz > 0; --_sz) {
+                    _alloc.destroy(&_ptr[_sz - 1]);
+                }
+            }
+        }
 
-//        vector (const vector& x);
+        iterator begin(){
+            return iterator(_ptr);
+        }
+
+        const_iterator begin() const {
+            return const_iterator(_ptr);
+        }
+
+        iterator end() {
+            return iterator(&_ptr[_sz]);
+        }
+        const_iterator end() const {
+            return const_iterator(&_ptr[_sz]);
+        }
+
+//        reverse_iterator rbegin();
+//        const_reverse_iterator rbegin() const;
+
+//        reverse_iterator rend();
+//        const_reverse_iterator rend() const;
 
         size_t size() const{
-            return this->sz;
+            return _sz;
         }
 
         size_t max_size() const{
-            return alloc.max_size();
+            return _alloc.max_size();
         }
 
         size_t capacity() const {
-            return this->cpcty;
+            return _cpcty;
         }
 
         // изменяет вектор до нужных размеров
         void resize (size_t n, T val = T()) {
-            if (n < this->sz) {
-                for (; this->sz > n; this->sz--)
-                    this->alloc.destroy(&ptr[sizeof(T) * this->sz]);
+            if (n < _sz) {
+                for (; _sz > n; _sz--)
+                    _alloc.destroy(&_ptr[sizeof(T) * _sz]);
             }
-            else if (n > this->cpcty) {
+            else if (n > _cpcty) {
                 reserve(n);
             }
-            else if (n > this->sz)
-                for(; this->sz < n;++this->sz)
-                    ptr[sz - 1] = T(val);
+            else if (n > _sz)
+                for(; _sz < n;++_sz)
+                    _ptr[_sz - 1] = T(val);
         }
 
         // возвращает true, если вектор пуст, иначе - false
         bool empty() const {
-            if (this->sz == 0)
+            if (_sz == 0)
                 return true;
             return false;
         }
@@ -94,62 +127,175 @@ namespace ft {
         void reserve (size_t n) {
             T* temp_ptr = NULL;
             T* for_del = NULL;
-            size_t new_cpcty = this->cpcty * 2;
-            if (n > this->cpcty) {
+            size_t new_cpcty = _cpcty * 2;
+            if (n > _cpcty) {
                 if (n > new_cpcty) {
                     new_cpcty = n;
                 }
-                temp_ptr = this->alloc.allocate(new_cpcty);
-                for (size_t cnt = 0; cnt < this->sz; cnt++) {
-                    this->alloc.construct(&temp_ptr[sizeof(T) * cnt], this->ptr[sizeof(T) * cnt]);
+                temp_ptr = _alloc.allocate(new_cpcty);
+                for (size_t cnt = 0; cnt < this->_sz; cnt++) {
+                    _alloc.construct(&temp_ptr[sizeof(T) * cnt], _ptr[sizeof(T) * cnt]);
                 }
-                for_del = this->ptr;
-                this->ptr = temp_ptr;
-                for (size_t cnt = this->sz; cnt > 0; --cnt) {
-                    this->alloc.destroy(&for_del[sizeof(T) * sz]);
+                for_del = _ptr;
+                _ptr = temp_ptr;
+                for (size_t cnt = this->_sz; cnt > 0; --cnt) {
+                    this->_alloc.destroy(&for_del[sizeof(T) * _sz]);
                 }
-                this->alloc.deallocate(for_del, this->cpcty);
-                this->cpcty = new_cpcty;
+                this->_alloc.deallocate(for_del, _cpcty);
+                this->_cpcty = new_cpcty;
             }
         }
 
         const T& operator[] (size_t n) const{
-            return ptr[sizeof(T) * n];
+            return _ptr[n];
         }
 
         T& operator[] (size_t n) {
-            return ptr[sizeof(T) * n];
+            return _ptr[n];
         }
 
-        // + вставляет элемент поданый в качестве аргумента в конец массива
-        void push_back (const T& val) {
-            if (this->sz == this->cpcty) {
-                reserve(this->cpcty + 1);
+        T& at (size_t n) {
+            if (n >= _sz) {
+                throw std::out_of_range("Index out of range");
             }
-            this->ptr[this->sz] = val;
-            this->sz++;
+            return _ptr[n];
         }
 
-        // + удаляет элемент с конца массива, уничтожая его
-        void pop_back() {
-            if (this->sz > 0) {
-                this->alloc.destroy(&this->ptr[--this->sz]);
+        const T& at (size_t n) const {
+            if (n >= _sz) {
+                throw std::out_of_range("Index out of range");
             }
+            return _ptr[n];
         }
 
-        void clear() {
-            if (this->sz > 0) {
-                for (; this->sz > 0; --this->sz) {
-                    this->alloc.destroy(&this->ptr[sz - 1]);
+        T& front(){
+            return _ptr;
+        }
+
+        const T& front() const{
+            return _ptr;
+        }
+
+        T& back(){
+            return _ptr[_sz - 1];
+        }
+
+        const T& back() const{
+            return _ptr[_sz - 1];
+        }
+
+
+        template <class InputIterator>
+        void assign (InputIterator first, InputIterator last) {
+            InputIterator temp = first;
+            size_t n = last - first;
+            if (n > _sz) {
+                T *_nptr = _alloc.allocate(n);
+                for (;temp!=last; ++temp)
+                    _alloc(*temp, *temp);
+                clear();
+                _alloc.deallocate(_ptr, _cpcty);
+                _ptr = _nptr;
+            }
+            else {
+                this->resize(n);
+                for (size_t tmp = 0; tmp < n; ++tmp) {
+                    _alloc.destroy(&_ptr[tmp]);
+                    _alloc.construct(&_ptr[tmp], *temp);
                 }
             }
         }
 
+        void assign (size_t n, const T& val) {
+            if (n > _sz) {
+                T *_nptr = _alloc.allocate(n);
+                for (size_t cnt = 0; cnt < _sz; cnt++) {
+                    _alloc.construct(&_nptr[cnt], val);
+                }
+                clear();
+                _alloc.deallocate(_ptr, _cpcty);
+                _ptr = _nptr;
+            }
+            else {
+                this->resize(n);
+                for (size_t tmp = 0; tmp < n; ++tmp) {
+                    _alloc.destroy(&_ptr[tmp]);
+                    _alloc.const  ruct(&_ptr[tmp], val);
+                }
+            }
+        }
+
+        // + вставляет элемент поданый в качестве аргумента в конец массива
+        void push_back (const T& val) {
+            if (_sz == _cpcty) {
+                reserve(_cpcty + 1);
+            }
+            _ptr[_sz] = val;
+            _sz++;
+        }
+
+        // + удаляет элемент с конца массива, уничтожая его
+        void pop_back() {
+            if (_sz > 0) {
+                _alloc.destroy(&_ptr[--_sz]);
+            }
+        }
+
+//        iterator insert (iterator position, const value_type& val) {
+//            iterator end = --this->end();
+//            if (this->_sz == this->_cpcty) {
+//                reserve(this->_cpcty + 1);
+//            }
+//            for (;position_new!=position; --end) {
+//
+//            }
+//        }
+//
+//        void insert (iterator position, size_type n, const value_type& val) {
+//
+//        }
+//
+//        template <class InputIterator>
+//        void insert (iterator position, InputIterator first, InputIterator last) {
+        allocator_type get_allocator() const {
+            return _alloc;
+        }
+
         ~vector() {
-            this->clear();
-            this->alloc.deallocate(this->ptr, this->cpcty);
+            clear();
+            _alloc.deallocate(_ptr, _cpcty);
         }
     };
+
+    template<typename T, class allocator_type >
+    bool operator== (const vector<T,allocator_type>& lhs, const vector<T,allocator_type>& rhs) {
+        return false;
+    }
+    template<typename T, class allocator_type >
+    bool operator!= (const vector<T,allocator_type>& lhs, const vector<T,allocator_type>& rhs) {
+        return false;
+    }
+    template<typename T, class allocator_type >
+    bool operator<  (const vector<T,allocator_type>& lhs, const vector<T,allocator_type>& rhs) {
+        return false;
+    }
+    template<typename T, class allocator_type >
+    bool operator<= (const vector<T,allocator_type>& lhs, const vector<T,allocator_type>& rhs) {
+        return false;
+    }
+    template<typename T, class allocator_type >
+    bool operator>  (const vector<T,allocator_type>& lhs, const vector<T,allocator_type>& rhs) {
+        return false;
+    }
+    template<typename T, class allocator_type >
+    bool operator>= (const vector<T,allocator_type>& lhs, const vector<T,allocator_type>& rhs) {
+        return false;
+    }
+
+    template <typename T, class allocator_type>
+    void swap (vector<T,allocator_type>& x, vector<T,allocator_type>& y) {
+        return;
+    }
 };
 
 #endif //VECTOR_HPP

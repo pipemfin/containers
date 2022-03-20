@@ -75,24 +75,129 @@
 //    return (0);
 //}
 
+//int main(int argc, char** argv)
+//{
+//    (void)argc;
+//    (void)argv;
+//    ft::stack<int> mystack;
+//    ft::stack<int> mystack2;
+//
+//    std::cout << mystack.empty() << std::endl;
+//    std::cout << mystack.size() << std::endl;
+//    mystack.push(10);
+//    std::cout << mystack.size() << std::endl;
+//    std::cout << mystack.empty() << std::endl;
+//
+//    std::cout << mystack.top() << std::endl;
+////    mystack.pop();
+////    std::cout << mystack.size() << std::endl;
+//
+//    bool a = mystack==mystack2;
+//    std::cout << a << std::endl;
+//    return (0);
+//}
+
+class newtype {
+public:
+    int first_elem;
+    int second_elem;
+
+    newtype() {
+        first_elem = 666;
+        second_elem = 666;
+    }
+
+    newtype(const newtype &a) {
+        first_elem = a.first_elem;
+        second_elem = a.second_elem;
+    }
+};
+/*
 int main(int argc, char** argv)
 {
     (void)argc;
     (void)argv;
-    ft::stack<int> mystack;
-    ft::stack<int> mystack2;
 
-    std::cout << mystack.empty() << std::endl;
-    std::cout << mystack.size() << std::endl;
-    mystack.push(10);
-    std::cout << mystack.size() << std::endl;
-    std::cout << mystack.empty() << std::endl;
+    ft::vector<int> vect(10, 10);
+    ft::vector<int>::iterator iter = vect.begin();
+    ft::vector<int>::iterator iter_sec = vect.begin();
+    ft::vector<int>::iterator iter2(iter);
+    ft::vector<int>::iterator end = vect.end();
+    bool eq = false;
+    newtype structure;
+    ft::vector<newtype> strict(10, structure);
+    ft::vector<newtype>::iterator strict_iter = strict.begin();
+    ft::vector<newtype>::iterator strict_end = strict.end();
 
-    std::cout << mystack.top() << std::endl;
-//    mystack.pop();
-//    std::cout << mystack.size() << std::endl;
+    std::cout << "size:" << vect.size() << " ,capacity:" << vect.capacity() << std::endl;
 
-    bool a = mystack==mystack2;
-    std::cout << a << std::endl;
+    std::cout << "iterators" << std::endl;
+    for (; iter != end; ++iter)
+        std::cout << "value:" << *iter << std::endl;
+    std::cout << "second iterator" << std::endl;
+    for (; iter2 != end; ++iter2)
+        std::cout << "value:" << *iter2 << std::endl;
+    std::cout << "check ->:" << std::endl;
+    for (; strict_iter != strict_end; ++strict_iter)
+        std::cout << "value:" << strict_iter->first_elem << " and:" << strict_iter->first_elem  << std::endl;
+    *iter_sec = 777;
+    std::cout << "check *a=t " << *iter_sec << std::endl;
+
+    iter = vect.begin();
+    for (int i = 0; iter != end; ++iter, i++)
+        *iter = i;
+
+    iter = vect.begin();
+    iter_sec = vect.begin();
+    ++iter_sec;
+    iter_sec++;
+    std::cout << "check ++a (must be 1) = " << *(++iter) << std::endl;
+    std::cout << "check a++ (must be 1) = " << *(iter++) << std::endl;
+
+    eq = (iter == iter_sec);
+    std::cout << "check *a++ == *b++ (must be 1) = " << eq << std::endl;
+
+
+    iter = vect.end();
+    iter_sec = vect.end();
+    --iter_sec;
+    iter_sec--;
+    std::cout << "check ++a (must be 9) = " << *(--iter) << std::endl;
+    std::cout << "check a++ (must be 9) = " << *(iter--) << std::endl;
+
+    eq = false;
+    eq = (iter == iter_sec);
+    std::cout << "check *a++ == *b++ (must be 1) = " << eq << std::endl;
+
+
+    iter = vect.begin();
+    iter += 5;
+    std::cout << "check a += n (must be 5) = " << *(iter) << std::endl;
+    iter -= 2;
+    std::cout << "check a -= n (must be 3) = " << *(iter) << std::endl;
+
+
+    std::cout << "check a > b (must be 0) = " << (iter > end) << std::endl;
+    std::cout << "check a < b (must be 1) = " << (iter < end) << std::endl;
+    std::cout << "check a >= b (must be 1) = " << (iter >= end) << std::endl;
+    std::cout << "check a <= b (must be 0) = " << (iter <= end) << std::endl;
+
+    iter = vect.begin();
+    std::cout << "check a[6] (must be 0) = " << iter[6] << std::endl;
+
     return (0);
+}*/
+
+int main(int argc, char** argv) {
+    (void) argc;
+    (void) argv;
+
+    ft::vector<int> first_vect(10, 10);
+    ft::vector<int> second_vect(first_vect);
+
+    for (size_t a = 0; a < second_vect.size() ; ++a) {
+        std::cout << "a = " << a << ", value:"<< second_vect[a] << std::endl;
+    }
+
+    std::cout << "Finish" << std::endl;
 }
