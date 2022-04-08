@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include "vector.hpp"
 #include "stack.hpp"
 
@@ -188,16 +189,29 @@ int main(int argc, char** argv)
     return (0);
 }*/
 
+//int main(int argc, char** argv) {
+//    (void) argc;
+//    (void) argv;
+//
+//    ft::vector<int> first_vect(10, 10);
+//
+//    std::cout << first_vect.size() << std::endl;
+//    first_vect.pop_back();
+//    std::cout << first_vect.size() << std::endl;
+//    std::cout << "Finish" << std::endl;
+//}
+
 int main(int argc, char** argv) {
     (void) argc;
     (void) argv;
 
-    ft::vector<int> first_vect(10, 10);
-    ft::vector<int> second_vect(first_vect);
-
-    for (size_t a = 0; a < second_vect.size() ; ++a) {
-        std::cout << "a = " << a << ", value:"<< second_vect[a] << std::endl;
+    std::vector<int> first_vect(10, 10);
+    std::vector<int>::iterator iter = first_vect.begin();
+//    std::cout << first_vect.size() << std::endl;
+    first_vect.insert(iter, 666);
+//    std::cout << first_vect.size() << std::endl;
+    for(int i = 0; i < first_vect.size(); ++i) {
+        std::cout << first_vect[i] << std::endl;
     }
-
     std::cout << "Finish" << std::endl;
 }

@@ -6,7 +6,9 @@
 #include <cmath>
 #include <iostream>
 #include <stdexcept>
+#include "iterator.hpp"
 #include "vector_iterator.hpp"
+#include "reverse_iterator.hpp"
 
 namespace ft {
 
@@ -19,8 +21,10 @@ namespace ft {
         allocator_type                     _alloc;
 
     public:
-        typedef typename ft::RandIt<T>              iterator;
-        typedef const typename ft::RandIt<T>        const_iterator;
+        typedef typename ft::RandIt<T>                          iterator;
+        typedef const typename ft::RandIt<T>                    const_iterator;
+        typedef typename ft::reverse_iterator<iterator>       reverse_iterator;
+        typedef const typename ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
         vector (const allocator_type& alloc = allocator_type()) {
             _sz = 0;
@@ -29,7 +33,7 @@ namespace ft {
             _alloc = alloc;
         }
 
-        vector (size_t n, const T& val = T(), const allocator_type& alloc = allocator_type()){
+        vector (size_t n, const T& val = T(), const allocator_type& alloc = allocator_type()) {
             _sz = n;
             _cpcty = n;
             _alloc = alloc;
@@ -80,21 +84,32 @@ namespace ft {
         iterator end() {
             return iterator(&_ptr[_sz]);
         }
+
         const_iterator end() const {
             return const_iterator(&_ptr[_sz]);
         }
 
-//        reverse_iterator rbegin();
-//        const_reverse_iterator rbegin() const;
+        reverse_iterator rbegin() {
+            return reverse_iterator(iterator(_ptr));
+        }
 
-//        reverse_iterator rend();
-//        const_reverse_iterator rend() const;
+        const_reverse_iterator rbegin() const {
+            return reverse_iterator(const_iterator(_ptr));
+        }
 
-        size_t size() const{
+        reverse_iterator rend() {
+            return reverse_iterator(iterator(&_ptr[_sz]));
+        }
+
+        const_reverse_iterator rend() const {
+            return reverse_iterator(const_iterator(&_ptr[_sz]));
+        }
+
+        size_t size() const {
             return _sz;
         }
 
-        size_t max_size() const{
+        size_t max_size() const {
             return _alloc.max_size();
         }
 
@@ -106,7 +121,7 @@ namespace ft {
         void resize (size_t n, T val = T()) {
             if (n < _sz) {
                 for (; _sz > n; _sz--)
-                    _alloc.destroy(&_ptr[sizeof(T) * _sz]);
+                    _alloc.destroy(&_ptr[_sz]);
             }
             else if (n > _cpcty) {
                 reserve(n);
@@ -134,12 +149,12 @@ namespace ft {
                 }
                 temp_ptr = _alloc.allocate(new_cpcty);
                 for (size_t cnt = 0; cnt < this->_sz; cnt++) {
-                    _alloc.construct(&temp_ptr[sizeof(T) * cnt], _ptr[sizeof(T) * cnt]);
+                    _alloc.construct(&temp_ptr[cnt], _ptr[cnt]);
                 }
                 for_del = _ptr;
                 _ptr = temp_ptr;
                 for (size_t cnt = this->_sz; cnt > 0; --cnt) {
-                    this->_alloc.destroy(&for_del[sizeof(T) * _sz]);
+                    this->_alloc.destroy(&for_del[_sz]);
                 }
                 this->_alloc.deallocate(for_del, _cpcty);
                 this->_cpcty = new_cpcty;
@@ -220,7 +235,7 @@ namespace ft {
                 this->resize(n);
                 for (size_t tmp = 0; tmp < n; ++tmp) {
                     _alloc.destroy(&_ptr[tmp]);
-                    _alloc.const  ruct(&_ptr[tmp], val);
+                    _alloc.construct(&_ptr[tmp], val);
                 }
             }
         }
@@ -241,15 +256,14 @@ namespace ft {
             }
         }
 
-//        iterator insert (iterator position, const value_type& val) {
-//            iterator end = --this->end();
-//            if (this->_sz == this->_cpcty) {
-//                reserve(this->_cpcty + 1);
-//            }
-//            for (;position_new!=position; --end) {
-//
-//            }
-//        }
+        iterator insert (iterator position, const T& val) {
+            iterator tmp = _ptr;
+            if (this->_sz == this->_cpcty) {
+                reserve(this->_cpcty + 1);
+            }
+
+            return end;
+        }
 //
 //        void insert (iterator position, size_type n, const value_type& val) {
 //
@@ -257,6 +271,7 @@ namespace ft {
 //
 //        template <class InputIterator>
 //        void insert (iterator position, InputIterator first, InputIterator last) {
+
         allocator_type get_allocator() const {
             return _alloc;
         }

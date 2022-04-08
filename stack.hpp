@@ -3,7 +3,7 @@
 
 #include <vector>
 namespace ft {
-    template<class T, class Container = std::vector <T> >
+    template<class T, class Container = vector <T> >
     class stack {
         protected:
             Container cntr_;
