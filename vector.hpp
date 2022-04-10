@@ -9,6 +9,7 @@
 #include "iterator.hpp"
 #include "vector_iterator.hpp"
 #include "reverse_iterator.hpp"
+#include "utils.hpp"
 
 namespace ft {
 
@@ -42,7 +43,7 @@ namespace ft {
                 _alloc.construct(&_ptr[cnt], val);
             }
         }
-//
+
 //        template <class InputIterator>
 //        vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) {
 //            size_t n = last - first;
@@ -133,11 +134,13 @@ namespace ft {
 
         // возвращает true, если вектор пуст, иначе - false
         bool empty() const {
-            if (_sz == 0)
-                return true;
-            return false;
+            return _sz == 0;
         }
 
+//        T* new_size(size_t n) {
+//            T* new_ptr;
+//            size_t new_cpcty = _cpcty * 2;
+//        }
         // + изменяет размер вектора до размера n, если текущий запас >= n, то ничего не делает, вроде норм написано
         void reserve (size_t n) {
             T* temp_ptr = NULL;
@@ -199,30 +202,29 @@ namespace ft {
             return _ptr[_sz - 1];
         }
 
-
-        template <class InputIterator>
-        void assign (InputIterator first, InputIterator last) {
-            InputIterator temp = first;
-            size_t n = last - first;
-            if (n > _sz) {
-                T *_nptr = _alloc.allocate(n);
-                for (;temp!=last; ++temp)
-                    _alloc(*temp, *temp);
-                clear();
-                _alloc.deallocate(_ptr, _cpcty);
-                _ptr = _nptr;
-            }
-            else {
-                this->resize(n);
-                for (size_t tmp = 0; tmp < n; ++tmp) {
-                    _alloc.destroy(&_ptr[tmp]);
-                    _alloc.construct(&_ptr[tmp], *temp);
-                }
-            }
-        }
+//        template <class InputIterator>
+//        void assign (InputIterator first, InputIterator last) {
+//            InputIterator temp = first;
+//            size_t n = last - first;
+//            if (n > _sz) {
+//                T *_nptr = _alloc.allocate(n);
+//                for (;temp!=last; ++temp)
+//                    _alloc(*temp, *temp);
+//                clear();
+//                _alloc.deallocate(_ptr, _cpcty);
+//                _ptr = _nptr;
+//            }
+//            else {
+//                this->resize(n);
+//                for (size_t tmp = 0; tmp < n; ++tmp) {
+//                    _alloc.destroy(&_ptr[tmp]);
+//                    _alloc.construct(&_ptr[tmp], *temp);
+//                }
+//            }
+//        }
 
         void assign (size_t n, const T& val) {
-            if (n > _sz) {
+            if (n > _cpcty) {
                 T *_nptr = _alloc.allocate(n);
                 for (size_t cnt = 0; cnt < _sz; cnt++) {
                     _alloc.construct(&_nptr[cnt], val);
@@ -230,11 +232,12 @@ namespace ft {
                 clear();
                 _alloc.deallocate(_ptr, _cpcty);
                 _ptr = _nptr;
+                _cpcty = n;
+                _sz = n;
             }
             else {
-                this->resize(n);
+                resize(n);
                 for (size_t tmp = 0; tmp < n; ++tmp) {
-                    _alloc.destroy(&_ptr[tmp]);
                     _alloc.construct(&_ptr[tmp], val);
                 }
             }
@@ -257,12 +260,12 @@ namespace ft {
         }
 
         iterator insert (iterator position, const T& val) {
-            iterator tmp = _ptr;
-            if (this->_sz == this->_cpcty) {
-                reserve(this->_cpcty + 1);
-            }
-
-            return end;
+            size_t pos = position - this->begin();
+            std::cout << pos << std::endl;
+//            if (this->_sz == this->_cpcty) {
+//                reserve(this->_cpcty + 1);
+//            }
+            return position;
         }
 //
 //        void insert (iterator position, size_type n, const value_type& val) {
@@ -271,6 +274,23 @@ namespace ft {
 //
 //        template <class InputIterator>
 //        void insert (iterator position, InputIterator first, InputIterator last) {
+
+        void swap (vector<T,allocator_type>& x) {
+            size_t          tmp_sz = this->_sz;
+            size_t          tmp_cpcty = this->_cpcty;
+            T*              tmp_ptr = this->_ptr;
+            allocator_type  tmp_alloc = this->_alloc;
+
+            this->_sz = x._sz;
+            this->_cpcty = x._cpcty;
+            this->_ptr = x._ptr;
+            this->_alloc = x._alloc;
+
+            x._sz = tmp_sz;
+            x._cpcty = tmp_cpcty;
+            x._ptr = tmp_ptr;
+            x._alloc = tmp_alloc;
+        }
 
         allocator_type get_allocator() const {
             return _alloc;
@@ -284,32 +304,35 @@ namespace ft {
 
     template<typename T, class allocator_type >
     bool operator== (const vector<T,allocator_type>& lhs, const vector<T,allocator_type>& rhs) {
-        return false;
+        return (lhs.size() == rhs.size() && equal(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
     }
+
     template<typename T, class allocator_type >
     bool operator!= (const vector<T,allocator_type>& lhs, const vector<T,allocator_type>& rhs) {
-        return false;
+        return !(lhs == rhs);
     }
+
     template<typename T, class allocator_type >
     bool operator<  (const vector<T,allocator_type>& lhs, const vector<T,allocator_type>& rhs) {
-        return false;
+        return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
     }
     template<typename T, class allocator_type >
     bool operator<= (const vector<T,allocator_type>& lhs, const vector<T,allocator_type>& rhs) {
-        return false;
+        return !ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end());
+
     }
     template<typename T, class allocator_type >
     bool operator>  (const vector<T,allocator_type>& lhs, const vector<T,allocator_type>& rhs) {
-        return false;
+        return ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end());
     }
     template<typename T, class allocator_type >
     bool operator>= (const vector<T,allocator_type>& lhs, const vector<T,allocator_type>& rhs) {
-        return false;
+        return !ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
     }
 
     template <typename T, class allocator_type>
     void swap (vector<T,allocator_type>& x, vector<T,allocator_type>& y) {
-        return;
+        x.swap(y);
     }
 };
 

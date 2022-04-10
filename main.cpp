@@ -98,21 +98,21 @@
 //    return (0);
 //}
 
-class newtype {
-public:
-    int first_elem;
-    int second_elem;
-
-    newtype() {
-        first_elem = 666;
-        second_elem = 666;
-    }
-
-    newtype(const newtype &a) {
-        first_elem = a.first_elem;
-        second_elem = a.second_elem;
-    }
-};
+//class newtype {
+//public:
+//    int first_elem;
+//    int second_elem;
+//
+//    newtype() {
+//        first_elem = 666;
+//        second_elem = 666;
+//    }
+//
+//    newtype(const newtype &a) {
+//        first_elem = a.first_elem;
+//        second_elem = a.second_elem;
+//    }
+//};
 /*
 int main(int argc, char** argv)
 {
@@ -205,13 +205,69 @@ int main(int argc, char** argv) {
     (void) argc;
     (void) argv;
 
-    std::vector<int> first_vect(10, 10);
-    std::vector<int>::iterator iter = first_vect.begin();
-//    std::cout << first_vect.size() << std::endl;
-    first_vect.insert(iter, 666);
-//    std::cout << first_vect.size() << std::endl;
-    for(int i = 0; i < first_vect.size(); ++i) {
+    ft::vector<int> first_vect(10, 10);
+    ft::vector<int> sec_vect(first_vect.begin(), first_vect.end());
+//    first_vect.assign(10, 5);
+
+    for (int i = 0; i < first_vect.size(); ++i) {
         std::cout << first_vect[i] << std::endl;
     }
-    std::cout << "Finish" << std::endl;
 }
+
+//operators
+//int main(int argc, char** argv) {
+//    (void) argc;
+//    (void) argv;
+//
+//    ft::vector<int> first_vect(10, 10);
+//    ft::vector<int> second_vect(15, 10);
+//    ft::vector<int> third_vect(10, 11);
+//    ft::vector<int> fourd_vect(10, 10);
+//
+//    std::cout << "\noperator =\n" << std::endl;
+//    std::cout << (first_vect == second_vect) << std::endl;
+//    std::cout << (first_vect == third_vect) << std::endl;
+//    std::cout << (first_vect == fourd_vect) << std::endl;
+//
+//    std::cout << "operator !=" << std::endl;
+//    std::cout << (first_vect != second_vect) << std::endl;
+//    std::cout << (first_vect != third_vect) << std::endl;
+//    std::cout << (first_vect != fourd_vect) << std::endl;
+//
+//    std::cout << "operator >" << std::endl;
+//    std::cout << (first_vect > second_vect) << std::endl;
+//    std::cout << (first_vect > third_vect) << std::endl;
+//    std::cout << (first_vect > fourd_vect) << std::endl;
+//
+//    std::cout << "operator >=" << std::endl;
+//    std::cout << (first_vect >= second_vect) << std::endl;
+//    std::cout << (first_vect >= third_vect) << std::endl;
+//    std::cout << (first_vect >= fourd_vect) << std::endl;
+//
+//    std::cout << "operator <" << std::endl;
+//    std::cout << (first_vect < second_vect) << std::endl;
+//    std::cout << (first_vect < third_vect) << std::endl;
+//    std::cout << (first_vect < fourd_vect) << std::endl;
+//
+//    std::cout << "operator <=" << std::endl;
+//    std::cout << (first_vect <= second_vect) << std::endl;
+//    std::cout << (first_vect <= third_vect) << std::endl;
+//    std::cout << (first_vect <= fourd_vect) << std::endl;
+//}
+
+//swap test
+//int main(int argc, char** argv) {
+//    (void) argc;
+//    (void) argv;
+//
+//    ft::vector<int> first_vect(10, 10);
+//    ft::vector<int> second_vect(20, 20);;
+//
+//    ft::swap(first_vect, second_vect);
+//    std::cout << "First vector " << first_vect.size() << std::endl;
+//    std::cout << "Second vector " << second_vect.size() << std::endl;
+//
+//    second_vect.swap(first_vect);
+//    std::cout << "First vector " << first_vect.size() << std::endl;
+//    std::cout << "Second vector " << second_vect.size() << std::endl;
+//}
