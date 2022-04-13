@@ -205,13 +205,27 @@ int main(int argc, char** argv) {
     (void) argc;
     (void) argv;
 
-    ft::vector<int> first_vect(10, 10);
-    ft::vector<int> sec_vect(first_vect.begin(), first_vect.end());
+    ft::vector<int> first_vect;
+//    ft::vector<int> sec_vect(first_vect.begin(), first_vect.end());
 //    first_vect.assign(10, 5);
+    first_vect.push_back(1);
+    first_vect.push_back(2);
+    first_vect.push_back(3);
+    first_vect.push_back(4);
+    first_vect.push_back(5);
+    first_vect.push_back(6);
 
-    for (int i = 0; i < first_vect.size(); ++i) {
-        std::cout << first_vect[i] << std::endl;
-    }
+    ft::vector<int>::iterator end = first_vect.end() - 1;
+    ft::vector<int>::iterator begin = first_vect.begin();
+    std::cout << first_vect.capacity() << std::endl;
+    std::cout << *end << std::endl;
+    std::cout << first_vect._ptr[first_vect._sz - 1]<< std::endl;
+    std::cout << *begin << std::endl;
+//    first_vect.erase(begin, end);
+////    std::cout << "HERE" << std::endl;
+//    for (ft::vector<int>::iterator start = first_vect.begin(); start != first_vect.end(); ++start) {
+//        std::cout << *start << std::endl;
+//    }
 }
 
 //operators

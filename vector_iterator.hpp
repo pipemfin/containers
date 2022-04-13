@@ -2,6 +2,7 @@
 #define VECTOR_ITERATOR_HPP
 
 #include "iterator.hpp"
+#include <iostream>
 
 namespace ft {
     template<typename T>
@@ -30,11 +31,11 @@ namespace ft {
             return *this;
         }
 
-        bool operator!=(RandIt &right) {
+        bool operator!= (const RandIt &right) const {
             return this->_ptr != right._ptr;
         }
 
-        bool operator==(RandIt &right) {
+        bool operator== (const RandIt &right) const {
             return this->_ptr == right._ptr;
         }
 
@@ -65,17 +66,17 @@ namespace ft {
         T* operator--(int) {
             T *temp = _ptr;
             _ptr--;
-            return (temp);
+            return temp;
         }
 
         RandIt& operator+(int obj) {
-            _ptr += obj;
-            return *this;
+            return RandIt(_ptr) += obj;
         }
 
         RandIt& operator-(int obj) {
-            _ptr -= obj;
-            return *this;
+            std::cout << "here" << *(_ptr - 1) << std::endl;
+            std::cout << "here" << *(RandIt(_ptr) -= obj) << std::endl;
+            return RandIt(_ptr) -= obj;
         }
 
         bool operator>(RandIt iter){
@@ -110,6 +111,17 @@ namespace ft {
 
         ~RandIt() {};
     };
+
+    template<typename T>
+    bool operator== (const RandIt<T> &left, const RandIt<T> &right) {
+        return left.operator==(right);
+    }
+
+    template<typename T>
+    bool operator!= (const RandIt<T> &left, const RandIt<T> &right) {
+        return !(left.operator==(right));
+    }
+
 }
 
 #endif //CONTAINERS_VECTOR_ITERATOR_HPP
