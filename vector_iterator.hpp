@@ -6,7 +6,7 @@
 
 namespace ft {
     template<typename T>
-    class RandIt : iterator<random_access_iterator_tag, T> {
+    class RandIt : public iterator<random_access_iterator_tag, T> {
     private:
         T *_ptr;
 
@@ -69,14 +69,16 @@ namespace ft {
             return temp;
         }
 
-        RandIt& operator+(int obj) {
-            return RandIt(_ptr) += obj;
+        RandIt operator+(int obj) {
+            return _ptr + obj;
         }
 
-        RandIt& operator-(int obj) {
-            std::cout << "here" << *(_ptr - 1) << std::endl;
-            std::cout << "here" << *(RandIt(_ptr) -= obj) << std::endl;
-            return RandIt(_ptr) -= obj;
+        RandIt operator-(int obj) {
+            return _ptr - obj;
+        }
+
+        int operator-(RandIt iter) {
+            return _ptr - iter._ptr;
         }
 
         bool operator>(RandIt iter){
@@ -96,9 +98,20 @@ namespace ft {
         }
 
         RandIt& operator+=(int obj) {
-            _ptr += obj;
+            int m = obj;
+            if (m >= 0) {
+                while (m--) ++(*this);
+            }
+            else {
+                while (m++) --(*this);
+            }
             return *this;
         }
+
+//        RandIt& operator+=(int obj) {
+//            _ptr += obj;
+//            return *this;
+//        }
 
         RandIt& operator-=(int obj) {
             _ptr -= obj;

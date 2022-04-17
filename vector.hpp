@@ -44,17 +44,17 @@ namespace ft {
             }
         }
 
-//        template <class InputIterator>
-//        vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) {
-//            size_t n = last - first;
-//            _sz = n;
-//            _cpcty = n;
-//            _alloc = alloc;
-//            _ptr = _alloc.allocate(n);
-//            for (size_t cnt = 0; cnt < _sz; cnt++) {
-//                _alloc.construct(&_ptr[cnt], first[cnt]);
-//            }
-//        }
+        template <class InputIterator>
+        vector (typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last, const allocator_type& alloc = allocator_type()) {
+            size_t n = last - first;
+            _sz = n;
+            _cpcty = n;
+            _alloc = alloc;
+            _ptr = _alloc.allocate(n);
+            for (size_t cnt = 0; cnt < _sz; cnt++) {
+                _alloc.construct(&_ptr[cnt], first[cnt]);
+            }
+        }
 
         vector (const vector& x) {
             _alloc = x.get_allocator();
@@ -67,8 +67,11 @@ namespace ft {
         }
 
         vector& operator= (const vector& x) {
-            resize(x.capacity());
-
+            if (this == &x)
+                return *this;
+            resize(x.size());
+            assign(x.begin(), x.end());
+            return *this;
         }
 
 
@@ -97,19 +100,19 @@ namespace ft {
         }
 
         reverse_iterator rbegin() {
-            return reverse_iterator(iterator(_ptr));
+            return reverse_iterator(iterator(&_ptr[_sz - 1]));
         }
 
         const_reverse_iterator rbegin() const {
-            return reverse_iterator(const_iterator(_ptr));
+            return reverse_iterator(const_iterator(&_ptr[_sz - 1]));
         }
 
         reverse_iterator rend() {
-            return reverse_iterator(iterator(&_ptr[_sz]));
+            return reverse_iterator(iterator(_ptr));
         }
 
         const_reverse_iterator rend() const {
-            return reverse_iterator(const_iterator(&_ptr[_sz]));
+            return reverse_iterator(const_iterator(_ptr));
         }
 
         size_t size() const {
@@ -143,10 +146,6 @@ namespace ft {
             return _sz == 0;
         }
 
-//        T* new_size(size_t n) {
-//            T* new_ptr;
-//            size_t new_cpcty = _cpcty * 2;
-//        }
         // + изменяет размер вектора до размера n, если текущий запас >= n, то ничего не делает, вроде норм написано
         void reserve (size_t n) {
             T* temp_ptr = NULL;
@@ -196,11 +195,11 @@ namespace ft {
         }
 
         T& front(){
-            return _ptr;
+            return *_ptr;
         }
 
         const T& front() const{
-            return _ptr;
+            return *_ptr;
         }
 
         T& back(){
@@ -212,7 +211,7 @@ namespace ft {
         }
 
         template <class InputIterator>
-        void assign (InputIterator first, InputIterator last) {
+        void assign (typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last) {
             size_t n = last - first;
             if (n > _cpcty) {
                 reserve(n);
@@ -221,18 +220,18 @@ namespace ft {
             for (size_t tmp = 0; first != last; ++first, ++tmp) {
                 _alloc.construct(&_ptr[tmp], *first);
             }
+            _sz = n;
         }
 
         void assign (size_t n, const T& val) {
             if (n > _cpcty) {
                 reserve(n);
             }
-            else {
-                clear();
-                for (size_t tmp = 0; tmp < n; ++tmp) {
-                    _alloc.construct(&_ptr[tmp], val);
-                }
+            clear();
+            for (size_t tmp = 0; tmp < n; ++tmp) {
+                _alloc.construct(&_ptr[tmp], val);
             }
+            _sz = n;
         }
 
         // + вставляет элемент поданый в качестве аргумента в конец массива
@@ -240,8 +239,7 @@ namespace ft {
             if (_sz == _cpcty) {
                 reserve(_cpcty + 1);
             }
-            _ptr[_sz] = val;
-            _sz++;
+            _alloc.construct(&_ptr[_sz++], val);
         }
 
         // + удаляет элемент с конца массива, уничтожая его
@@ -252,59 +250,107 @@ namespace ft {
         }
 
         iterator insert (iterator position, const T& val) {
-            size_t pos = position - this->begin();
-            std::cout << pos << std::endl;
-//            if (this->_sz == this->_cpcty) {
-//                reserve(this->_cpcty + 1);
-//            }
-            return position;
+            size_t pos = position - begin();
+            iterator to_return;
+            if (_sz == _cpcty) {
+                reserve(_cpcty + 1);
+            }
+            for (iterator end_el = end(); end_el != &_ptr[pos]; --end_el) {
+                _alloc.construct(&(*end_el), *(end_el - 1));
+                _alloc.destroy(&*(end_el - 1));
+            }
+            _alloc.construct(&_ptr[pos], val);
+            ++_sz;
+            return &_ptr[pos];
         }
-//
-//        void insert (iterator position, size_type n, const value_type& val) {
-//
-//        }
-//
+
+        void insert (iterator position, size_t n, const T& val) {
+            size_t pos = position - begin();
+            std::cout << pos << std::endl;
+            if (_sz + n > _cpcty) {
+                reserve(_sz + n);
+            }
+//            std::cout << "here" << std::endl;
+//            std::cout << "else" << *(end() + n - 1) << std::endl;
+            for (iterator end_el = end() + n - 1; end_el != &_ptr[pos]; --end_el) {
+                _alloc.construct(&(*end_el), *(end_el - n));
+                _alloc.destroy(&*(end_el - n));
+            }
+//            std::cout << "here1 " << n << std::endl;
+            iterator beg_el = begin() + pos;
+            iterator end_el = beg_el + n;
+            for (; beg_el != end_el; ++beg_el) {
+//                std::cout << val << std::endl;
+                _alloc.construct(&(*beg_el), val);
+            }
+//            std::cout << "here2" << std::endl;
+            _sz += n;
+        }
+
+        template <class InputIterator>
+        void insert (iterator position, typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last) {
+            size_t n = last - first;
+            size_t pos = position - begin();
+            if (_sz + n > _cpcty) {
+                reserve(_sz + n);
+            }
+            for (iterator end_el = end() + n - 1; end_el != &_ptr[pos]; --end_el) {
+                _alloc.construct(&(*end_el), *(end_el - n));
+                _alloc.destroy(&*(end_el - n));
+            }
+            iterator beg_el = begin() + pos;
+            iterator end_el = beg_el + n;
+            for (; beg_el != end_el; ++beg_el, ++first) {
+                _alloc.construct(&(*beg_el), *first);
+            }
+            _sz += n;
+        }
+
 //        template <class InputIterator>
-//        void insert (iterator position, InputIterator first, InputIterator last) {
+//        void insert (iterator position, InputIterator first, InputIterator last);
 
         iterator erase (iterator position) {
             iterator tmp(position);
-            _alloc.destroy(position);
+            _alloc.destroy(&(*position));
             for ( ;position != end(); ++position) {
-                _alloc.construct(position, *(position + 1));
+                _alloc.construct(&(*position), *(position + 1));
             }
+            _sz--;
             return tmp;
         }
 
         iterator erase (iterator first, iterator last) {
             iterator tmp(first);
+            size_t n = last - first;
             iterator copy(first);
             for ( ; first != last; ++first) {
-                std::cout << *first << std::endl;
                 _alloc.destroy(&(*first));
             }
-            std::cout << "HERE" << std::endl;
             for ( ; first != end(); ++first, ++copy) {
                 _alloc.construct(&(*copy), *(first));
             }
+            _sz -= n;
             return tmp;
         }
 
-        void swap (vector<T,allocator_type>& x) {
-            size_t          tmp_sz = this->_sz;
-            size_t          tmp_cpcty = this->_cpcty;
-            T*              tmp_ptr = this->_ptr;
-            allocator_type  tmp_alloc = this->_alloc;
+        void swap (vector& x) {
+            size_t          tmp_sz = _sz;
+            size_t          tmp_cpcty = _cpcty;
+            T*              tmp_ptr = _ptr;
+//            allocator_type  tmp_alloc = _alloc;
 
-            this->_sz = x._sz;
-            this->_cpcty = x._cpcty;
-            this->_ptr = x._ptr;
-            this->_alloc = x._alloc;
+            if (this == &x)
+                return ;
+
+            _sz = x._sz;
+            _cpcty = x._cpcty;
+            _ptr = x._ptr;
+//            _alloc = x._alloc;
 
             x._sz = tmp_sz;
             x._cpcty = tmp_cpcty;
             x._ptr = tmp_ptr;
-            x._alloc = tmp_alloc;
+//            x._alloc = tmp_alloc;
         }
 
         allocator_type get_allocator() const {

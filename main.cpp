@@ -1,7 +1,8 @@
 #include <iostream>
 #include <vector>
 #include "vector.hpp"
-#include "stack.hpp"
+//#include "stack.hpp"
+#include "utils.hpp"
 
 //int main(int argc, char** argv)
 //{
@@ -201,32 +202,32 @@ int main(int argc, char** argv)
 //    std::cout << "Finish" << std::endl;
 //}
 
-int main(int argc, char** argv) {
-    (void) argc;
-    (void) argv;
-
-    ft::vector<int> first_vect;
-//    ft::vector<int> sec_vect(first_vect.begin(), first_vect.end());
-//    first_vect.assign(10, 5);
-    first_vect.push_back(1);
-    first_vect.push_back(2);
-    first_vect.push_back(3);
-    first_vect.push_back(4);
-    first_vect.push_back(5);
-    first_vect.push_back(6);
-
-    ft::vector<int>::iterator end = first_vect.end() - 1;
-    ft::vector<int>::iterator begin = first_vect.begin();
-    std::cout << first_vect.capacity() << std::endl;
-    std::cout << *end << std::endl;
-    std::cout << first_vect._ptr[first_vect._sz - 1]<< std::endl;
-    std::cout << *begin << std::endl;
+//int main(int argc, char** argv) {
+//    (void) argc;
+//    (void) argv;
+//
+//    ft::vector<int> first_vect;
+////    ft::vector<int> sec_vect(first_vect.begin(), first_vect.end());
+////    first_vect.assign(10, 5);
+//    first_vect.push_back(1);
+//    first_vect.push_back(2);
+//    first_vect.push_back(3);
+//    first_vect.push_back(4);
+//    first_vect.push_back(5);
+//    first_vect.push_back(6);
+//
+//    ft::vector<int>::iterator end = first_vect.end() - 1;
+//    ft::vector<int>::iterator begin = first_vect.begin();
+//    std::cout << first_vect.capacity() << std::endl;
+//    std::cout << *end << std::endl;
+//    std::cout << first_vect._ptr[first_vect._sz - 1]<< std::endl;
+//    std::cout << *begin << std::endl;
 //    first_vect.erase(begin, end);
 ////    std::cout << "HERE" << std::endl;
 //    for (ft::vector<int>::iterator start = first_vect.begin(); start != first_vect.end(); ++start) {
 //        std::cout << *start << std::endl;
 //    }
-}
+//}
 
 //operators
 //int main(int argc, char** argv) {
@@ -285,3 +286,24 @@ int main(int argc, char** argv) {
 //    std::cout << "First vector " << first_vect.size() << std::endl;
 //    std::cout << "Second vector " << second_vect.size() << std::endl;
 //}
+
+#include <cstddef>
+#include <cstdint>
+#include <numeric>
+
+int main()
+{
+    ft::vector<int> vect2(15, 666);
+
+    ft::vector<int>::iterator iterator1(vect2.begin() + 10);
+
+//    iterator1 += 3;
+
+//    iterator1 = vect2.insert(iterator1, 5,10);
+    vect2.insert(iterator1, 5,10);
+    std::cout << "inserted elem" << *iterator1 << std::endl;
+
+    for (int i = 0; i < vect2.size(); ++i) {
+        std::cout << vect2[i] << std::endl;
+    }
+}

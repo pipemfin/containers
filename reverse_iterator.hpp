@@ -41,7 +41,7 @@ namespace ft {
         }
 
         Ref operator*() const {
-            return _current - 1;
+            return *(_current - 1);
         }
 
         Ptr operator->() const {

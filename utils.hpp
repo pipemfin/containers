@@ -12,8 +12,56 @@ namespace ft {
         typedef T type;
     };
 
-    template <class T>
-    struct is_integral;
+    template <bool is_integral, typename T>
+    class is_integral_struct {
+    public:
+        typedef T type;
+        static const bool value = is_integral;
+    };
+
+    template <typename>
+    class is_integral : public is_integral_struct<false, bool> {};
+
+    template <>
+    class is_integral<bool> : public is_integral_struct<true, bool> {};
+
+    template <>
+    class is_integral<char> : public is_integral_struct<true, char> {};
+
+    template <>
+    class is_integral<signed char> : public is_integral_struct<true, signed char> {};
+
+    template <>
+    class is_integral<unsigned char> : public is_integral_struct<true, unsigned char> {};
+
+    template <>
+    class is_integral<wchar_t> : public is_integral_struct<true, wchar_t> {};
+
+    template <>
+    class is_integral<short> : public is_integral_struct<true, short> {};
+
+    template <>
+    class is_integral<unsigned short> : public is_integral_struct<true, unsigned short> {};
+
+    template <>
+    class is_integral<int> : public is_integral_struct<true, int> {};
+
+    template <>
+    class is_integral<long> : public is_integral_struct<true, long> {};
+
+    template <>
+    class is_integral<unsigned long> : public is_integral_struct<true, unsigned long> {};
+
+    template <>
+    class is_integral<float> : public is_integral_struct<false, float> {};
+
+    template <>
+    class is_integral<double> : public is_integral_struct<false, double> {};
+
+    template <>
+    class is_integral<long double> : public is_integral_struct<false, long double> {};
+
+
 
     template<class InputIterator1, class InputIterator2>
     bool equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2) {
