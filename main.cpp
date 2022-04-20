@@ -271,39 +271,98 @@ int main(int argc, char** argv)
 //}
 
 //swap test
-//int main(int argc, char** argv) {
-//    (void) argc;
-//    (void) argv;
-//
-//    ft::vector<int> first_vect(10, 10);
-//    ft::vector<int> second_vect(20, 20);;
-//
-//    ft::swap(first_vect, second_vect);
-//    std::cout << "First vector " << first_vect.size() << std::endl;
-//    std::cout << "Second vector " << second_vect.size() << std::endl;
-//
-//    second_vect.swap(first_vect);
-//    std::cout << "First vector " << first_vect.size() << std::endl;
-//    std::cout << "Second vector " << second_vect.size() << std::endl;
-//}
+int main(int argc, char** argv) {
+    (void) argc;
+    (void) argv;
+
+    ft::vector<int> first_vect(10, 10);
+    ft::vector<int> second_vect(20, 20);;
+
+    first_vect.erase(first_vect.begin());
+    ft::swap(first_vect, second_vect);
+    std::cout << "First vector " << first_vect.size() << std::endl;
+    std::cout << "Second vector " << second_vect.size() << std::endl;
+
+    second_vect.swap(first_vect);
+    std::cout << "First vector " << first_vect.size() << std::endl;
+    std::cout << "Second vector " << second_vect.size() << std::endl;
+}
 
 #include <cstddef>
 #include <cstdint>
 #include <numeric>
 
-int main()
-{
-    ft::vector<int> vect2(15, 666);
-
-    ft::vector<int>::iterator iterator1(vect2.begin() + 10);
-
+//int main()
+//{
+//    std::vector<int> v;
+//    std::vector<int>::iterator iter = v.insert(v.begin(), 1);
+//    ft::vector<int> vect2(15, 666);
+//
+//    ft::vector<int>::reverse_iterator iterator1(vect2.rbegin());
+//
 //    iterator1 += 3;
-
+//
 //    iterator1 = vect2.insert(iterator1, 5,10);
-    vect2.insert(iterator1, 5,10);
-    std::cout << "inserted elem" << *iterator1 << std::endl;
+//    vect2.insert(iterator1, 5,10);
+//    std::cout << "inserted elem" << *iterator1 << std::endl;
+//
+//    for (int i = 0; i < v.size(); ++i) {
+//        std::cout << v[i] << std::endl;
+//    }
+//    std::cout << *iter << std::endl;
+//}
 
-    for (int i = 0; i < vect2.size(); ++i) {
-        std::cout << vect2[i] << std::endl;
-    }
-}
+//class B {
+//public:
+//    char *l;
+//    int i;
+//    B():l(nullptr), i(1) {};
+//    B(const int &ex) {
+//        this->i = ex;
+//        this->l = new char('a');
+//    };
+//    virtual ~B() {
+//        delete this->l;
+//        this->l = nullptr;
+//    };
+//};
+//
+//class A : public B {
+//public:
+//    A():B(){};
+//    A(const B* ex){
+//        this->l = new char(*(ex->l));
+//        this->i = ex->i;
+//        if (ex->i == -1) throw "n";
+//    }
+//    ~A() {
+//        delete this->l;
+//        this->l = nullptr;
+//    };
+//};
+//
+//int main()
+//{
+//    int _ratio = 400;
+//    ft::vector<int> vector(10,10);
+//    ft::vector<int> v;
+//    vector.assign(2600 * _ratio, 1);
+//    v.push_back(*(vector.insert(vector.end() - 800 * _ratio, 44)));
+//    v.push_back(vector.size());
+//    v.push_back(vector.capacity());
+//    std::unique_ptr<B> k2(new B(3));
+//    std::unique_ptr<B> k3(new B(4));
+//    std::unique_ptr<B> k4(new B(-1));
+//    ft::vector<A> vv;
+//    ft::vector<B*> v1;
+//
+//    v1.push_back(&(*k2));
+//    v1.push_back(&(*k3));
+//    v1.push_back(&(*k4));
+//    std::cout << "acd" << std::endl;
+//    try { vv.insert(vv.begin(), v1.begin(), v1.end()); }
+//    catch (...) {
+////        v.push_back(vv.size());
+////        v.push_back(vv.capacity());
+//    }
+//}

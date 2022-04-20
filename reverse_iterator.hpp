@@ -40,7 +40,7 @@ namespace ft {
             return _current;
         }
 
-        Ref operator*() const {
+        Ref operator*() {
             return *(_current - 1);
         }
 
@@ -59,12 +59,12 @@ namespace ft {
             return (copy);
         }
 
-        reverse_iterator &operator--() {
+        reverse_iterator &operator--() const {
             ++_current;
             return *this;
         }
 
-        reverse_iterator operator--(int) {
+        reverse_iterator operator--(int) const {
             reverse_iterator copy(this);
             ++_current;
             return copy;
@@ -75,7 +75,7 @@ namespace ft {
             return *this;
         }
 
-        reverse_iterator &operator+(Dist n) const {
+        reverse_iterator &operator+(Dist n) {
             return reverse_iterator(*this) += n;
         }
 
@@ -84,7 +84,7 @@ namespace ft {
             return *this;
         }
 
-        reverse_iterator &operator-(Dist n) const {
+        reverse_iterator &operator-(Dist n) {
             return reverse_iterator(*this) -= n;
         }
 

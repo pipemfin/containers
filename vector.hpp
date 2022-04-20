@@ -22,9 +22,9 @@ namespace ft {
         allocator_type                     _alloc;
 
     public:
-        typedef typename ft::RandIt<T>                          iterator;
-        typedef const typename ft::RandIt<T>                    const_iterator;
-        typedef typename ft::reverse_iterator<iterator>       reverse_iterator;
+        typedef typename ft::RandIt<T>                              iterator;
+        typedef const typename ft::RandIt<T>                        const_iterator;
+        typedef typename ft::reverse_iterator<iterator>             reverse_iterator;
         typedef const typename ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
         vector (const allocator_type& alloc = allocator_type()) {
@@ -135,10 +135,10 @@ namespace ft {
             }
             else if (n > _cpcty) {
                 reserve(n);
+
             }
-            else if (n > _sz)
-                for(; _sz < n;++_sz)
-                    _ptr[_sz - 1] = T(val);
+            for(; _sz < n;++_sz)
+                _ptr[_sz - 1] = T(val);
         }
 
         // возвращает true, если вектор пуст, иначе - false
@@ -251,13 +251,12 @@ namespace ft {
 
         iterator insert (iterator position, const T& val) {
             size_t pos = position - begin();
-            iterator to_return;
             if (_sz == _cpcty) {
                 reserve(_cpcty + 1);
             }
             for (iterator end_el = end(); end_el != &_ptr[pos]; --end_el) {
                 _alloc.construct(&(*end_el), *(end_el - 1));
-                _alloc.destroy(&*(end_el - 1));
+//                _alloc.destroy(&*(end_el - 1));
             }
             _alloc.construct(&_ptr[pos], val);
             ++_sz;
@@ -274,7 +273,7 @@ namespace ft {
 //            std::cout << "else" << *(end() + n - 1) << std::endl;
             for (iterator end_el = end() + n - 1; end_el != &_ptr[pos]; --end_el) {
                 _alloc.construct(&(*end_el), *(end_el - n));
-                _alloc.destroy(&*(end_el - n));
+//                _alloc.destroy(&*(end_el - n));
             }
 //            std::cout << "here1 " << n << std::endl;
             iterator beg_el = begin() + pos;
@@ -291,13 +290,22 @@ namespace ft {
         void insert (iterator position, typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last) {
             size_t n = last - first;
             size_t pos = position - begin();
+            std::cout << "abc" << std::endl;
             if (_sz + n > _cpcty) {
                 reserve(_sz + n);
             }
-            for (iterator end_el = end() + n - 1; end_el != &_ptr[pos]; --end_el) {
+//            std::cout << "abc:" << n << std::endl;
+//            std::cout << "abc:" << pos << std::endl;
+//            std::cout << "size:" << size() << std::endl;
+//            std::cout << "cpcty:" << capacity() << std::endl;
+            for (iterator end_el = end() - 1; end_el != &_ptr[pos]; --end_el) {
+//                std::cout << "1" << std::endl;
                 _alloc.construct(&(*end_el), *(end_el - n));
-                _alloc.destroy(&*(end_el - n));
+//                std::cout << "2" << std::endl;
+//                _alloc.destroy(&*(end_el - n));
+//                std::cout << "3" << std::endl;
             }
+//            std::cout << "abc" << std::endl;
             iterator beg_el = begin() + pos;
             iterator end_el = beg_el + n;
             for (; beg_el != end_el; ++beg_el, ++first) {
@@ -311,8 +319,8 @@ namespace ft {
 
         iterator erase (iterator position) {
             iterator tmp(position);
-            _alloc.destroy(&(*position));
-            for ( ;position != end(); ++position) {
+//            _alloc.destroy(&(*position));
+            for (iterator end_it = end(); position != end_it; ++position) {
                 _alloc.construct(&(*position), *(position + 1));
             }
             _sz--;
@@ -337,7 +345,7 @@ namespace ft {
             size_t          tmp_sz = _sz;
             size_t          tmp_cpcty = _cpcty;
             T*              tmp_ptr = _ptr;
-//            allocator_type  tmp_alloc = _alloc;
+            allocator_type  tmp_alloc = _alloc;
 
             if (this == &x)
                 return ;
@@ -345,12 +353,12 @@ namespace ft {
             _sz = x._sz;
             _cpcty = x._cpcty;
             _ptr = x._ptr;
-//            _alloc = x._alloc;
+            _alloc = x._alloc;
 
             x._sz = tmp_sz;
             x._cpcty = tmp_cpcty;
             x._ptr = tmp_ptr;
-//            x._alloc = tmp_alloc;
+            x._alloc = tmp_alloc;
         }
 
         allocator_type get_allocator() const {
