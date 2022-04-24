@@ -1,12 +1,12 @@
-#ifndef VECTOR_ITERATOR_HPP
-#define VECTOR_ITERATOR_HPP
+#ifndef MAP_ITERATOR_HPP
+#define MAP_ITERATOR_HPP
 
 #include "iterator.hpp"
 #include <iostream>
 
 namespace ft {
-    template<typename T, typename Pt, typename Rt, typename Dtype>
-    class RandIt : public iterator<random_access_iterator_tag, T, Dtype, Pt, Rt> {
+    template<typename T>
+    class BidIt : public iterator<bidirectional_iterator_tag, T> {
     private:
         T *_ptr;
 
@@ -108,10 +108,10 @@ namespace ft {
             return *this;
         }
 
-//        RandIt& operator+=(int obj) {
-//            _ptr += obj;
-//            return *this;
-//        }
+        //        RandIt& operator+=(int obj) {
+        //            _ptr += obj;
+        //            return *this;
+        //        }
 
         RandIt& operator-=(int obj) {
             _ptr -= obj;
@@ -125,16 +125,17 @@ namespace ft {
         ~RandIt() {};
     };
 
-    template<typename T, typename Pt, typename Rt, typename Dtype>
-    bool operator== (const RandIt<T, Pt, Rt, Dtype> &left, const RandIt<T, Pt, Rt, Dtype> &right) {
+    template<typename T>
+    bool operator== (const RandIt<T> &left, const RandIt<T> &right) {
         return left.operator==(right);
     }
 
-    template<typename T, typename Pt, typename Rt, typename Dtype>
-    bool operator!= (const RandIt<T, Pt, Rt, Dtype> &left, const RandIt<T, Pt, Rt, Dtype> &right) {
+    template<typename T>
+    bool operator!= (const RandIt<T> &left, const RandIt<T> &right) {
         return !(left.operator==(right));
     }
 
 }
 
-#endif //CONTAINERS_VECTOR_ITERATOR_HPP
+
+#endif //MAP_ITERATOR_HPP

@@ -271,76 +271,128 @@ int main(int argc, char** argv)
 //}
 
 //swap test
-int main(int argc, char** argv) {
-    (void) argc;
-    (void) argv;
+//int main(int argc, char** argv) {
+//    (void) argc;
+//    (void) argv;
+//
+//    ft::vector<int> first_vect(10, 10);
+//    ft::vector<int> second_vect(20, 20);;
+//
+//    first_vect.erase(first_vect.begin());
+//    ft::swap(first_vect, second_vect);
+//    std::cout << "First vector " << first_vect.size() << std::endl;
+//    std::cout << "Second vector " << second_vect.size() << std::endl;
+//
+//    second_vect.swap(first_vect);
+//    std::cout << "First vector " << first_vect.size() << std::endl;
+//    std::cout << "Second vector " << second_vect.size() << std::endl;
+//}
 
-    ft::vector<int> first_vect(10, 10);
-    ft::vector<int> second_vect(20, 20);;
-
-    first_vect.erase(first_vect.begin());
-    ft::swap(first_vect, second_vect);
-    std::cout << "First vector " << first_vect.size() << std::endl;
-    std::cout << "Second vector " << second_vect.size() << std::endl;
-
-    second_vect.swap(first_vect);
-    std::cout << "First vector " << first_vect.size() << std::endl;
-    std::cout << "Second vector " << second_vect.size() << std::endl;
-}
-
-#include <cstddef>
-#include <cstdint>
-#include <numeric>
+//#include <cstddef>
+//#include <cstdint>
+//#include <numeric>
+//
 
 //int main()
 //{
-//    std::vector<int> v;
-//    std::vector<int>::iterator iter = v.insert(v.begin(), 1);
-//    ft::vector<int> vect2(15, 666);
+//    ft::vector<int> vect;
+//    ft::vector<int> copy;
 //
-//    ft::vector<int>::reverse_iterator iterator1(vect2.rbegin());
-//
-//    iterator1 += 3;
-//
-//    iterator1 = vect2.insert(iterator1, 5,10);
-//    vect2.insert(iterator1, 5,10);
-//    std::cout << "inserted elem" << *iterator1 << std::endl;
-//
-//    for (int i = 0; i < v.size(); ++i) {
-//        std::cout << v[i] << std::endl;
+//    vect.push_back(666);
+//    vect.push_back(666);
+//    for (int i = 0; i < 10; ++i) {
+//        copy.push_back(i);
 //    }
-//    std::cout << *iter << std::endl;
+//    vect.insert(vect.end(), copy.begin(), copy.end());
+//    for (int i = 0; i < vect.size(); ++i) {
+//        std::cout << vect[i] << std::endl;
+//    }
 //}
 
-//class B {
-//public:
-//    char *l;
-//    int i;
-//    B():l(nullptr), i(1) {};
-//    B(const int &ex) {
-//        this->i = ex;
-//        this->l = new char('a');
-//    };
-//    virtual ~B() {
-//        delete this->l;
-//        this->l = nullptr;
-//    };
-//};
+//int main()
+//{
+//    ft::vector<int> vect(5, 10);
 //
-//class A : public B {
-//public:
-//    A():B(){};
-//    A(const B* ex){
-//        this->l = new char(*(ex->l));
-//        this->i = ex->i;
-//        if (ex->i == -1) throw "n";
+////        vect.insert(vect.end(), 2);
+////        vect.insert(vect.end() - 1, 2);
+//        vect.insert(vect.begin() + 1, 2);
+////    vect.insert(vect.begin(), 2);
+//
+//    for (int i = 0; i < vect.size(); ++i) {
+//        std::cout << "-->" << vect[i] << "<--" << std::endl;
 //    }
-//    ~A() {
-//        delete this->l;
-//        this->l = nullptr;
-//    };
-//};
+//}
+
+//int main()
+//{
+//    ft::vector<int> vect(10, 10);
 //
+//    //    vect.insert(vect.end(), 2, 11);
+//    //    vect.insert(vect.end() - 1, 2, 11);
+//    //    vect.insert(vect.begin(), 2, 11);
+//    vect.insert(vect.begin() + 1, 2, 11);
+//
+//    for (int i = 0; i < vect.size(); ++i) {
+//        std::cout << "-->" << vect[i] << "<--" << std::endl;
+//    }
+//}
+
+//int main()
+//{
+//    ft::vector<int> vect(4, 10);
+//    ft::vector<int> vect2(10, 11);
+//
+////    vect.insert(vect.end(), 2, 11);
+////    vect.insert(vect.end() - 1, 2, 11);
+////    vect.insert(vect.begin(), 2, 11);
+////    vect.insert(vect.begin() + 1, 2, 11);
+//
+//    for (int i = 0; i < vect.size(); ++i) {
+//        std::cout << "-->" << vect[i] << "<--" << std::endl;
+//    }
+//}
+
+//int main()
+//{
+//    ft::vector<int> vect(10);
+//    ft::vector<int> vect2(3, 3);
+//
+//    vect.insert(vect.begin(), vect2.begin(), vect2.end());
+//
+//    for (int i = 0; i < vect.size(); ++i) {
+//        std::cout << vect[i] << std::endl;
+//    }
+//}
+
+class B {
+public:
+    char *l;
+    int i;
+    B():l(nullptr), i(1) {};
+    B(const int &ex) {
+        this->i = ex;
+        this->l = new char('a');
+    };
+    virtual ~B() {
+        delete this->l;
+        this->l = nullptr;
+    };
+};
+
+class A : public B {
+public:
+    A():B(){};
+    A(const B* ex){
+        this->l = new char(*(ex->l));
+        this->i = ex->i;
+        if (ex->i == -1) throw "n";
+    }
+    ~A() {
+        delete this->l;
+        this->l = nullptr;
+    };
+};
+
 //int main()
 //{
 //    int _ratio = 400;
@@ -359,10 +411,43 @@ int main(int argc, char** argv) {
 //    v1.push_back(&(*k2));
 //    v1.push_back(&(*k3));
 //    v1.push_back(&(*k4));
-//    std::cout << "acd" << std::endl;
+//    for (int i = 0;i < 3; ++i){
+//        std::cout << v1[i]->i << std::endl;
+//    }
+//    std::cout << "before call 'insert'" << std::endl;
 //    try { vv.insert(vv.begin(), v1.begin(), v1.end()); }
 //    catch (...) {
-////        v.push_back(vv.size());
-////        v.push_back(vv.capacity());
+//        v.push_back(vv.size());
+//        v.push_back(vv.capacity());
+//        std::cout << vv.size() << std::endl;
+//        for (int i = 0; i < vv.size(); ++i){
+//            std::cout << vv[i].i << std::endl;
+//        }
 //    }
 //}
+
+int main()
+{
+    std::vector<A>   vect;
+    std::vector<B*> copy;
+    char *first;
+    char *second;
+    std::unique_ptr<B> k2(new B(3));
+    std::unique_ptr<B> k3(new B(4));
+    std::unique_ptr<B> k4(new B(-1));
+    copy.push_back(&(*k2));
+    copy.push_back(&(*k3));
+    copy.push_back(&(*k4));
+//    vect.pop_back();
+//    vect.pop_back();
+    try {
+        vect.insert(vect.begin(), copy.begin(), copy.end());
+    }
+    catch (...){
+        std::cout << "size -->" << vect.size() << "<--" << std::endl;
+        std::cout << "cpcty -->" << vect.capacity() << "<--" << std::endl;
+    }
+//    for (int i = 0; i < vect.size(); ++i) {
+//        std::cout << "-->" << vect[i] << "<--" << std::endl;
+//    }
+}
