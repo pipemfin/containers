@@ -142,7 +142,6 @@ namespace ft {
             }
             else if (n > _cpcty) {
                 reserve(n);
-
             }
             for(; _sz < n;++_sz)
                 _ptr[_sz - 1] = T(val);
@@ -152,20 +151,35 @@ namespace ft {
         bool empty() const {
             return _sz == 0;
         }
-
-        // + изменяет размер вектора до размера n, если текущий запас >= n, то ничего не делает, вроде норм написано
-        void reserve (size_type n) {
-            T* temp_ptr = NULL;
-            T* for_del = NULL;
-            size_type new_cpcty = _cpcty * 2;
-            if (n >= _alloc.max_size()) {
-                throw std::length_error("Index out of range");
-            }
-            if (n > _cpcty) {
+        
+        size_type get_new_cpcty(size_type n, size_type cpcty) {
+            if (n > cpcty) {
+                size_type new_cpcty = cpcty * 2;
                 if (n > new_cpcty) {
                     new_cpcty = n;
                 }
-                temp_ptr = _alloc.allocate(new_cpcty);
+                return new_cpcty;
+            }
+            return cpcty;
+        }
+
+        // + изменяет размер вектора до размера n, если текущий запас >= n, то ничего не делает, вроде норм написано
+        T* get_reserved_memory (size_type new_cpcty) {
+            T* temp_ptr = NULL;
+            if (new_cpcty >= _alloc.max_size()) {
+                throw std::length_error("Index out of range");
+            }
+            temp_ptr = _alloc.allocate(new_cpcty);
+            return temp_ptr;
+        }
+
+        void reserve (size_type n) {
+            T* temp_ptr = NULL;
+            T* for_del = NULL;
+
+            if (n > _cpcty) {
+                size_type new_cpcty = get_new_cpcty(n, _cpcty);
+                temp_ptr = get_reserved_memory(new_cpcty);
                 for (size_type cnt = 0; cnt < this->_sz; cnt++) {
                     _alloc.construct(&temp_ptr[cnt], _ptr[cnt]);
                 }
@@ -178,6 +192,31 @@ namespace ft {
                 _cpcty = new_cpcty;
             }
         }
+
+//        void reserve (size_type n) {
+//            T* temp_ptr = NULL;
+//            T* for_del = NULL;
+//            size_type new_cpcty = _cpcty * 2;
+//            if (n >= _alloc.max_size()) {
+//                throw std::length_error("Index out of range");
+//            }
+//            if (n > _cpcty) {
+//                if (n > new_cpcty) {
+//                    new_cpcty = n;
+//                }
+//                temp_ptr = _alloc.allocate(new_cpcty);
+//                for (size_type cnt = 0; cnt < this->_sz; cnt++) {
+//                    _alloc.construct(&temp_ptr[cnt], _ptr[cnt]);
+//                }
+//                for_del = _ptr;
+//                _ptr = temp_ptr;
+//                for (size_type cnt = this->_sz; cnt > 0; --cnt) {
+//                    _alloc.destroy(&for_del[_sz]);
+//                }
+//                _alloc.deallocate(for_del, _cpcty);
+//                _cpcty = new_cpcty;
+//            }
+//        }
 
         const T& operator[] (size_type n) const{
             return _ptr[n];
@@ -271,105 +310,129 @@ namespace ft {
             _alloc.deallocate(tmp, size);
         }
 
+        void copy_back(iterator from, iterator to, size_type n) {
+            iterator from_cp(from);
+            iterator to_cp(to);
 
-        iterator insert (iterator position, const T& val) {
-            difference_type pos = position - begin();
-            difference_type ost = end() - position;
-
-            if (_sz == _cpcty) {
-                T *tmp = _alloc.allocate(_cpcty + 1);
-                init(tmp, begin(), end());
-                try {
-                    if (pos < _sz) {
-                        for (iterator end_el = iterator(&tmp[pos + ost]); end_el != &tmp[pos]; --end_el) {
-                            _alloc.construct(&(*end_el), *(end_el - 1));
-                            _alloc.destroy(&*(end_el - 1));
-                        }
-                    }
-                    _alloc.construct(&tmp[pos], val);
-                    _ptr = tmp;
-                    ++_sz;
-
-                }
-                catch (...) {
-                    destroy(iterator(tmp), iterator(tmp + _cpcty + 1));
-                    throw;
-                }
+            for (int i = 0; i < n; ++i, --from, --to) {
+                _alloc.construct(&(*to), *(from));
             }
-            else {
-                try {
-                    if (pos < _sz) {
-                        for (iterator end_el = iterator(&_ptr[pos + ost]); end_el != &_ptr[pos]; --end_el) {
-                            _alloc.construct(&(*end_el), *(end_el - 1));
-                            _alloc.destroy(&*(end_el - 1));
-                        }
-                    }
-                    _alloc.construct(&_ptr[pos], val);
-                    ++_sz;
-                }
-                catch (...) {
-                    throw;
-                }
-            }
-            return &_ptr[pos];
         }
 
+        void copy_construct(iterator from, iterator to, size_type n) {
+            iterator from_cp(from);
+            iterator to_cp(to);
+
+            for (int i = 0; i < n; ++i, ++from, ++to) {
+                _alloc.construct(&(*to), *(from));
+            }
+        }
+
+        iterator insert (iterator position, const T& val) {
+            size_type pos = position - begin();
+            insert(position, 1, val);
+            return iterator(_ptr + pos);
+        }
+        
         void insert (iterator position, size_type n, const T& val) {
             difference_type pos = position - begin();
             difference_type ost = end() - position;
-//            std::cout << "ostatok:" << ost << std::endl;
-//            std::cout << "pos:" << pos << std::endl;
             if (_sz + n > _cpcty) {
-                reserve(_sz + n);
-            }
-            if (pos < _sz) {
-                iterator end_el = iterator(&_ptr[pos + n + ost - 1]);
-                for (; ost > 0; --ost, --end_el) {
-//                    std::cout << "construct " << std::endl;
-                    _alloc.construct(&(*end_el), *(end_el - n));
-                    _alloc.destroy(&*(end_el - n));
+                size_type new_cpcty = get_new_cpcty(_sz + n, _cpcty);
+                T *new_ptr = get_reserved_memory(new_cpcty);
+                if (_sz > 0) {
+                    if (pos < _sz) {
+                        copy_construct(this->begin(), new_ptr, pos);
+                        copy_construct(this->begin() + pos, new_ptr + n + pos, ost);
+                    } else {
+                        copy_construct(this->begin(), new_ptr, _sz);
+                    }
                 }
+                iterator beg_el = iterator(new_ptr) + pos;
+                iterator end_el = beg_el + n;
+                for (; beg_el != end_el; ++beg_el) {
+                    _alloc.construct(&(*beg_el), val);
+                }
+                size_type new_size = _sz + n;
+                clear();
+                _alloc.deallocate(_ptr, _cpcty);
+                _sz = new_size;
+                _cpcty = new_cpcty;
+                _ptr = new_ptr;
             }
-            iterator beg_el = begin() + pos;
-            iterator end_el = beg_el + n;
-            for (; beg_el != end_el; ++beg_el) {
-//                std::cout << "i" << std::endl;
-                _alloc.construct(&(*beg_el), val);
+            else {
+                if (pos < _sz) {
+                    iterator end_el = iterator(&_ptr[pos + n + ost - 1]);
+                    iterator from = end_el - n;
+                    copy_back(from, end_el, ost);
+                }
+                iterator beg_el = begin() + pos;
+                iterator end_el = beg_el + n;
+                for (; beg_el != end_el; ++beg_el) {
+                    _alloc.construct(&(*beg_el), val);
+                }
+                _sz += n;
             }
-            _sz += n;
         }
 
         template <class InputIterator>
         void insert (iterator position, typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last) {
+//            std::cout << "inside func 1" << std::endl;
             difference_type n = last - first;
             difference_type pos = position - begin();
             difference_type ost = end() - position;
-//            std::cout << "iterators" << std::endl;
             if (_sz + n > _cpcty) {
-                reserve(_sz + n);
-            }
-            if (pos < _sz) {
-                for (iterator end_el = iterator(&_ptr[pos + n + ost - 1]); ost > 0; --ost) {
-                    _alloc.construct(&(*end_el), *(end_el - n));
-                    _alloc.destroy(&*(end_el - n));
+//                std::cout << "inside func 2" << std::endl;
+                size_type new_cpcty = get_new_cpcty(_sz + n, _cpcty);
+//                std::cout << "inside func 2.1" << std::endl;
+                T *new_ptr = get_reserved_memory(new_cpcty);
+                if (pos < _sz) {
+//                    std::cout << "inside func 2.1.1" << std::endl;
+                    copy_construct(this->begin(), new_ptr, pos);
+                    copy_construct(this->begin() + pos, new_ptr + n + pos, ost);
                 }
+                else {
+//                    std::cout << "inside func 2.1.2" << std::endl;
+                    copy_construct(this->begin(), new_ptr,_sz);
+                }
+                iterator beg_el = new_ptr + pos;
+                iterator end_el = beg_el + n;
+//                std::cout << "inside func 2.2" << std::endl;
+                for (; beg_el != end_el; ++beg_el, ++first) {
+                    _alloc.construct(&(*beg_el), *first);
+                }
+//                std::cout << "inside func 2.3" << std::endl;
+                size_type new_size = _sz + n;
+                clear();
+                _alloc.deallocate(_ptr, _cpcty);
+                _sz = new_size;
+                _cpcty = new_cpcty;
+                _ptr = new_ptr;
+//                std::cout << "inside func 2.4" << std::endl;
             }
-            iterator beg_el = begin() + pos;
-            iterator end_el = beg_el + n;
-            for (; beg_el != end_el; ++beg_el, ++first) {
-                _alloc.construct(&(*beg_el), *first);
+            else {
+//                std::cout << "inside func 3" << std::endl;
+                if (pos < _sz) {
+                    iterator end_el = iterator(&_ptr[pos + n + ost - 1]);
+                    iterator from = end_el - n;
+                    copy_back(from, end_el, ost);
+                }
+                iterator beg_el = begin() + pos;
+                iterator end_el = beg_el + n;
+                for (; beg_el != end_el; ++beg_el, ++first) {
+                    _alloc.construct(&(*beg_el), *first);
+                }
+                _sz += n;
             }
-            _sz += n;
         }
 
         iterator erase (iterator position) {
-            iterator tmp(position);
-//            _alloc.destroy(&(*position));
-            for (iterator end_it = end(); position != end_it; ++position) {
-                _alloc.construct(&(*position), *(position + 1));
+            difference_type pos = position - begin();
+            for (size_type i = 0; i < _sz; ++i) {
+                _alloc.construct(_ptr + pos + i, *(_ptr + pos + i + 1));
             }
             _sz--;
-            return tmp;
+            return _ptr + pos;
         }
 
         iterator erase (iterator first, iterator last) {

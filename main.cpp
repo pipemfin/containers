@@ -293,23 +293,28 @@ int main(int argc, char** argv)
 //#include <numeric>
 //
 
-//int main()
-//{
-//    ft::vector<int> vect;
+int main()
+{
+    ft::vector<int> vect;
 //    ft::vector<int> copy;
-//
-//    vect.push_back(666);
-//    vect.push_back(666);
+//    ft::vector<int>::iterator pos;
+
+    vect.push_back(666);
+    vect.push_back(666);
+    vect.push_back(666);
+    vect.push_back(666);
 //    for (int i = 0; i < 10; ++i) {
 //        copy.push_back(i);
 //    }
-//    vect.insert(vect.end(), copy.begin(), copy.end());
-//    for (int i = 0; i < vect.size(); ++i) {
-//        std::cout << vect[i] << std::endl;
-//    }
-//}
+    vect.insert(vect.end(), 1, 10);
+    for (int i = 0; i < vect.size(); ++i) {
+        std::cout << vect[i] << std::endl;
+    }
+    std::cout << "size:" << vect.size() << "cpcty:" << vect.capacity() << std::endl;
+//    std::cout << "Позиция:" << *pos << std::endl;
+}
 
-//int main()
+//int main()v
 //{
 //    ft::vector<int> vect(5, 10);
 //
@@ -426,28 +431,28 @@ public:
 //    }
 //}
 
-int main()
-{
-    std::vector<A>   vect;
-    std::vector<B*> copy;
-    char *first;
-    char *second;
-    std::unique_ptr<B> k2(new B(3));
-    std::unique_ptr<B> k3(new B(4));
-    std::unique_ptr<B> k4(new B(-1));
-    copy.push_back(&(*k2));
-    copy.push_back(&(*k3));
-    copy.push_back(&(*k4));
-//    vect.pop_back();
-//    vect.pop_back();
-    try {
-        vect.insert(vect.begin(), copy.begin(), copy.end());
-    }
-    catch (...){
-        std::cout << "size -->" << vect.size() << "<--" << std::endl;
-        std::cout << "cpcty -->" << vect.capacity() << "<--" << std::endl;
-    }
-//    for (int i = 0; i < vect.size(); ++i) {
-//        std::cout << "-->" << vect[i] << "<--" << std::endl;
+//int main()
+//{
+//    std::vector<A>   vect;
+//    std::vector<B*> copy;
+//    char *first;
+//    char *second;
+//    std::unique_ptr<B> k2(new B(3));
+//    std::unique_ptr<B> k3(new B(4));
+//    std::unique_ptr<B> k4(new B(-1));
+//    copy.push_back(&(*k2));
+//    copy.push_back(&(*k3));
+//    copy.push_back(&(*k4));
+////    vect.pop_back();
+////    vect.pop_back();
+//    try {
+//        vect.insert(vect.begin(), copy.begin(), copy.end());
 //    }
-}
+//    catch (...){
+//        std::cout << "size -->" << vect.size() << "<--" << std::endl;
+//        std::cout << "cpcty -->" << vect.capacity() << "<--" << std::endl;
+//    }
+////    for (int i = 0; i < vect.size(); ++i) {
+////        std::cout << "-->" << vect[i] << "<--" << std::endl;
+////    }
+//}

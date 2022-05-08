@@ -5,133 +5,83 @@
 #include <iostream>
 
 namespace ft {
-    template<typename T>
+    template<typename T, typename K>
     class BidIt : public iterator<bidirectional_iterator_tag, T> {
     private:
-        T *_ptr;
+        typedef Node<T,K>* NodePointer;
+        NodePointer *_node;
 
     public:
-        RandIt() {
-            _ptr = NULL;
+        BidIt() {
+            _node = NULL;
         }
 
-        RandIt(const RandIt &iter) {
-            _ptr = iter._ptr;
+        BidIt(const BidIt &iter) {
+            _node = iter._node;
         }
 
-        RandIt(T *ptr) {
-            _ptr = ptr;
+        BidIt(Node *node) {
+            _node = node;
         }
 
-        RandIt& operator=(const RandIt &iter) {
+        BidIt& operator=(const BidIt &iter) {
             if (this == &iter) {
                 return *this;
             }
-            _ptr = iter._ptr;
+            _node = iter._node;
             return *this;
         }
 
-        bool operator!= (const RandIt &right) const {
-            return this->_ptr != right._ptr;
+        bool operator!= (const BidIt &right) const {
+            return this->_node != right._node;
         }
 
-        bool operator== (const RandIt &right) const {
-            return this->_ptr == right._ptr;
+        bool operator== (const BidIt &right) const {
+            return this->_node == right._node;
         }
 
         T& operator*() {
-            return *_ptr;
+            return *_node;
         }
 
         T* operator->() {
-            return _ptr;
+            return _node;
         }
 
         //++a;
         T* operator++() {
-            return ++_ptr;
+            if ()
+            return ++_node;
         }
 
         //a++;
         T* operator++(int) {
-            T *temp = _ptr;
-            _ptr++;
+            T *temp = _node;
+            _node++;
             return temp;
         }
 
         T* operator--() {
-            return --_ptr;
+            return --_node;
         }
 
         T* operator--(int) {
-            T *temp = _ptr;
-            _ptr--;
+            T *temp = _node;
+            _node--;
             return temp;
         }
 
-        RandIt operator+(int obj) {
-            return _ptr + obj;
-        }
-
-        RandIt operator-(int obj) {
-            return _ptr - obj;
-        }
-
-        int operator-(RandIt iter) {
-            return _ptr - iter._ptr;
-        }
-
-        bool operator>(RandIt iter){
-            return _ptr > iter._ptr;
-        }
-
-        bool operator<(RandIt iter){
-            return _ptr < iter._ptr;
-        }
-
-        bool operator>=(RandIt iter){
-            return _ptr >= iter._ptr;
-        }
-
-        bool operator<=(RandIt iter){
-            return _ptr <= iter._ptr;
-        }
-
-        RandIt& operator+=(int obj) {
-            int m = obj;
-            if (m >= 0) {
-                while (m--) ++(*this);
-            }
-            else {
-                while (m++) --(*this);
-            }
-            return *this;
-        }
-
-        //        RandIt& operator+=(int obj) {
-        //            _ptr += obj;
-        //            return *this;
-        //        }
-
-        RandIt& operator-=(int obj) {
-            _ptr -= obj;
-            return *this;
-        }
-
-        T& operator[] (size_t n) {
-            return _ptr[n];
-        }
-
-        ~RandIt() {};
+        next()
+        ~BidIt() {};
     };
 
     template<typename T>
-    bool operator== (const RandIt<T> &left, const RandIt<T> &right) {
+    bool operator== (const BidIt<T> &left, const BidIt<T> &right) {
         return left.operator==(right);
     }
 
     template<typename T>
-    bool operator!= (const RandIt<T> &left, const RandIt<T> &right) {
+    bool operator!= (const BidIt<T> &left, const BidIt<T> &right) {
         return !(left.operator==(right));
     }
 
