@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include "map.hpp"
 #include "vector.hpp"
 //#include "stack.hpp"
 #include "utils.hpp"
@@ -293,26 +294,26 @@ int main(int argc, char** argv)
 //#include <numeric>
 //
 
-int main()
-{
-    ft::vector<int> vect;
-//    ft::vector<int> copy;
-//    ft::vector<int>::iterator pos;
-
-    vect.push_back(666);
-    vect.push_back(666);
-    vect.push_back(666);
-    vect.push_back(666);
-//    for (int i = 0; i < 10; ++i) {
-//        copy.push_back(i);
+//int main()
+//{
+//    ft::vector<int> vect;
+////    ft::vector<int> copy;
+////    ft::vector<int>::iterator pos;
+//
+//    vect.push_back(666);
+//    vect.push_back(666);
+//    vect.push_back(666);
+//    vect.push_back(666);
+////    for (int i = 0; i < 10; ++i) {
+////        copy.push_back(i);
+////    }
+//    vect.insert(vect.end(), 1, 10);
+//    for (int i = 0; i < vect.size(); ++i) {
+//        std::cout << vect[i] << std::endl;
 //    }
-    vect.insert(vect.end(), 1, 10);
-    for (int i = 0; i < vect.size(); ++i) {
-        std::cout << vect[i] << std::endl;
-    }
-    std::cout << "size:" << vect.size() << "cpcty:" << vect.capacity() << std::endl;
-//    std::cout << "Позиция:" << *pos << std::endl;
-}
+//    std::cout << "size:" << vect.size() << "cpcty:" << vect.capacity() << std::endl;
+////    std::cout << "Позиция:" << *pos << std::endl;
+//}
 
 //int main()v
 //{
@@ -456,3 +457,10 @@ public:
 ////        std::cout << "-->" << vect[i] << "<--" << std::endl;
 ////    }
 //}
+
+int main()
+{
+    ft::map<int, int> mymap;
+
+    std::cout << mymap.size() << std::endl;
+}

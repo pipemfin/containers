@@ -1,19 +1,25 @@
-//
-// Created by Johnna Jerrod on 5/8/22.
-//
-
 #ifndef NODE_HPP
 #define NODE_HPP
 
 
+#include "utils.hpp"
+
+template <class K, class V>
 struct node {
-    value_type      data;
-    bool            isRed;
-    node            *left;
-    node            *right;
-    node            *parent;
-    node()
+    typedef ft::pair<const K, V>    value_type;
+    bool                            isred;
+    bool                            isnil;
+    node                            *left;
+    node                            *right;
+    node                            *parent;
+    value_type                      *data;
+
+    node() : left(NULL), right(NULL), parent(NULL), isred(true), isnil(true) {}
+
+    node(K key, V value) : left(NULL), right(NULL), parent(NULL), isred(true), isnil(false) {
+        data = ft::make_pair(key, value);
+    }
 };
 
 
-#endif //CONTAINERS_NODE_HPP
+#endif //NODE_HPP

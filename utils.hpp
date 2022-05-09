@@ -92,7 +92,7 @@ namespace ft {
         while (first1 != last1) {
             if (first2 == last2 || comp(first2, first1))
                 return false;
-            else if comp(first1, first2)
+            else if (comp(first1, first2))
                 return true;
             ++first1;
             ++first2;
@@ -107,13 +107,45 @@ namespace ft {
         first_type first;
         second_type second;
 
-        pair() {};
+        pair () : first(T1()), second(T2()) {}
 
+        pair (const T1& v1, const T2& v2) : first(v1), second(v2) {}
 
+        pair(const pair<T1, T2>& x) : first(x.first), second(x.second) {}
     };
+
+    template <class T1, class T2> inline
+    bool operator==(const pair<T1, T2>& X, const pair<T1, T2>& Y) {
+        return (X.first == Y.first && X.second == Y.second);
+    }
+
+    template <class T1, class T2> inline
+    bool operator!=(const pair<T1, T2>& X, const pair<T1, T2>& Y) {
+        return !(X == Y);
+    }
+
+    template <class T1, class T2> inline
+    bool operator<(const pair<T1, T2>& X, const pair<T1, T2>& Y) {
+        return ((X.first < Y.first) && (X.second == Y.second));
+    }
+
+    template <class T1, class T2> inline
+    bool operator>(const pair<T1, T2>& X, const pair<T1, T2>& Y) {
+        return (Y < X);
+    }
+
+    template <class T1, class T2> inline
+    bool operator<=(const pair<T1, T2>& X, const pair<T1, T2>& Y) {
+        return !(Y < X);
+    }
+
+    template <class T1, class T2> inline
+    bool operator>=(const pair<T1, T2>& X, const pair<T1, T2>& Y) {
+        return !(X < Y);
+    }
+
     template <class T1, class T2>
-    pair<T1,T2> make_pair (T1 x, T2 y)
-    {
+    pair<T1,T2> make_pair (T1 x, T2 y) {
         return pair<T1,T2>(x,y);
     }
 }

@@ -2,16 +2,24 @@
 #define MAP_ITERATOR_HPP
 
 #include "iterator.hpp"
+#include "node.hpp"
 #include <iostream>
 
 namespace ft {
-    template<typename T, typename K>
-    class BidIt : public iterator<bidirectional_iterator_tag, T> {
+    template<typename Key, typename T>
+    class BidIt : public iterator<bidirectional_iterator_tag, node<T,K> > {
     private:
-        typedef Node<T,K>* NodePointer;
-        NodePointer *_node;
+        typedef node<T,K> Node;
+        Node *_node;
 
     public:
+        typedef BidIt<typename Key, typename T>  Iter;
+        typedef typename Iter::iterator_category iterator_category;
+        typedef typename Iter::value_type        value_type;
+        typedef typename Iter::difference_type   difference_type;
+        typedef typename Iter::pointer           pointer;
+        typedef typename Iter::reference         reference;
+
         BidIt() {
             _node = NULL;
         }
@@ -24,7 +32,7 @@ namespace ft {
             _node = node;
         }
 
-        BidIt& operator=(const BidIt &iter) {
+        reference operator=(const BidIt &iter) {
             if (this == &iter) {
                 return *this;
             }
@@ -33,45 +41,84 @@ namespace ft {
         }
 
         bool operator!= (const BidIt &right) const {
-            return this->_node != right._node;
+            return _node != right._node;
         }
 
         bool operator== (const BidIt &right) const {
-            return this->_node == right._node;
+            return _node == right._node;
         }
 
-        T& operator*() {
+        reference operator*() {
             return *_node;
         }
 
-        T* operator->() {
+        pointer operator->() {
             return _node;
         }
 
-        //++a;
-        T* operator++() {
-            if ()
-            return ++_node;
+        //a++;
+        pointer operator++() {
+            Next();
+            return _node;
         }
 
-        //a++;
-        T* operator++(int) {
-            T *temp = _node;
+        pointer operator++(int) {
+            pointer temp = _node;
             _node++;
             return temp;
         }
 
-        T* operator--() {
-            return --_node;
+        pointer operator--() {
+            Prev();
+            return _node;
         }
 
-        T* operator--(int) {
-            T *temp = _node;
+        pointer operator--(int) {
+            pointer temp = _node;
             _node--;
             return temp;
         }
 
-        next()
+        pointer maximum(pointer node) {
+            for ( ; node->right->type != nil; node = node->right)
+                return node
+        }
+
+        pointer minimum(pointer node) {
+            for ( ; node->left->type != nil; node = node->left)
+                return node
+        }
+
+        void Prev() {
+            if (_node == NULL)
+                ;
+            else if (!left->isnil)
+                _node = maximum(left);
+            else {
+                pointer tmp = _node->parent;
+                while (!tmp->isnil && _node == tmp.left) {
+                    _node = tmp;
+                    tmp = tmp->parent;
+                }
+                _node = tmp;
+            }
+        }
+
+        void Next() {
+            if (_node == NULL)
+                ;
+            else if (!right->isnil)
+                _node = minimum(right);
+            else {
+                pointer tmp = _node->parent;
+                while (!tmp->isnil && _node == tmp.right) {
+                    _node = tmp;
+                    tmp = tmp->parent;
+                }
+                _node = tmp;
+            }
+        }
+
         ~BidIt() {};
     };
 

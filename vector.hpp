@@ -377,41 +377,32 @@ namespace ft {
 
         template <class InputIterator>
         void insert (iterator position, typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last) {
-//            std::cout << "inside func 1" << std::endl;
             difference_type n = last - first;
             difference_type pos = position - begin();
             difference_type ost = end() - position;
             if (_sz + n > _cpcty) {
-//                std::cout << "inside func 2" << std::endl;
                 size_type new_cpcty = get_new_cpcty(_sz + n, _cpcty);
-//                std::cout << "inside func 2.1" << std::endl;
                 T *new_ptr = get_reserved_memory(new_cpcty);
                 if (pos < _sz) {
-//                    std::cout << "inside func 2.1.1" << std::endl;
                     copy_construct(this->begin(), new_ptr, pos);
                     copy_construct(this->begin() + pos, new_ptr + n + pos, ost);
                 }
                 else {
-//                    std::cout << "inside func 2.1.2" << std::endl;
                     copy_construct(this->begin(), new_ptr,_sz);
                 }
                 iterator beg_el = new_ptr + pos;
                 iterator end_el = beg_el + n;
-//                std::cout << "inside func 2.2" << std::endl;
                 for (; beg_el != end_el; ++beg_el, ++first) {
                     _alloc.construct(&(*beg_el), *first);
                 }
-//                std::cout << "inside func 2.3" << std::endl;
                 size_type new_size = _sz + n;
                 clear();
                 _alloc.deallocate(_ptr, _cpcty);
                 _sz = new_size;
                 _cpcty = new_cpcty;
                 _ptr = new_ptr;
-//                std::cout << "inside func 2.4" << std::endl;
             }
             else {
-//                std::cout << "inside func 3" << std::endl;
                 if (pos < _sz) {
                     iterator end_el = iterator(&_ptr[pos + n + ost - 1]);
                     iterator from = end_el - n;
