@@ -6,20 +6,21 @@
 #include <iostream>
 
 namespace ft {
-    template<typename Key, typename T>
-    class BidIt : public iterator<bidirectional_iterator_tag, node<T,K> > {
+    template<typename K, typename V, typename Pt, typename Rt, typename Dtype>
+class BidIt : public iterator<bidirectional_iterator_tag, node<const K, V>, Dtype, Pt, Rt> {
+    public:
+        typedef node<const K, V>                                                    Node;
+        typedef BidIt<bidirectional_iterator_tag, node<const K, V>, Pt, Rt, Dtype>  iterator;
+//        typedef typename iterator::iterator_category                                iterator_category;
+//        typedef typename Iterator::value_type                                       value_type;
+//        typedef typename Iterator::difference_type                                  difference_type;
+//        typedef typename Iterator::pointer                                          pointer;
+//        typedef typename Iterator::reference                                        reference;
+
     private:
-        typedef node<T,K> Node;
-        Node *_node;
+        node<const K, V> *_node;
 
     public:
-        typedef BidIt<typename Key, typename T>  Iter;
-        typedef typename Iter::iterator_category iterator_category;
-        typedef typename Iter::value_type        value_type;
-        typedef typename Iter::difference_type   difference_type;
-        typedef typename Iter::pointer           pointer;
-        typedef typename Iter::reference         reference;
-
         BidIt() {
             _node = NULL;
         }
@@ -32,7 +33,7 @@ namespace ft {
             _node = node;
         }
 
-        reference operator=(const BidIt &iter) {
+        Node& operator=(const BidIt &iter) {
             if (this == &iter) {
                 return *this;
             }
@@ -48,55 +49,57 @@ namespace ft {
             return _node == right._node;
         }
 
-        reference operator*() {
+        Node& operator*() {
             return *_node;
         }
 
-        pointer operator->() {
+        Node* operator->() {
             return _node;
         }
 
         //a++;
-        pointer operator++() {
+        Node* operator++() {
             Next();
             return _node;
         }
 
-        pointer operator++(int) {
-            pointer temp = _node;
+        Node* operator++(int) {
+            Node* temp = _node;
             _node++;
             return temp;
         }
 
-        pointer operator--() {
+        Node* operator--() {
             Prev();
             return _node;
         }
 
-        pointer operator--(int) {
-            pointer temp = _node;
+        Node* operator--(int) {
+            Node* temp = _node;
             _node--;
             return temp;
         }
 
-        pointer maximum(pointer node) {
-            for ( ; node->right->type != nil; node = node->right)
-                return node
+        Node* maximum(Node* node) {
+            for ( ; !node->right->isnil; node = node->right)
+                ;
+            return node;
         }
 
-        pointer minimum(pointer node) {
-            for ( ; node->left->type != nil; node = node->left)
-                return node
+        Node* minimum(Node* node) {
+            for ( ; !node->left->isnil; node = node->left)
+                ;
+            return node;
         }
 
         void Prev() {
             if (_node == NULL)
                 ;
-            else if (!left->isnil)
-                _node = maximum(left);
+            else if (!_node->left->isnil)
+                _node = maximum(_node->left);
             else {
-                pointer tmp = _node->parent;
-                while (!tmp->isnil && _node == tmp.left) {
+                Node* tmp = _node->parent;
+                while (!tmp->isnil && _node == tmp->left) {
                     _node = tmp;
                     tmp = tmp->parent;
                 }
@@ -107,11 +110,11 @@ namespace ft {
         void Next() {
             if (_node == NULL)
                 ;
-            else if (!right->isnil)
-                _node = minimum(right);
+            else if (!_node->right->isnil)
+                _node = minimum(_node->right);
             else {
-                pointer tmp = _node->parent;
-                while (!tmp->isnil && _node == tmp.right) {
+                Node* tmp = _node->parent;
+                while (!tmp->isnil && _node == tmp->right) {
                     _node = tmp;
                     tmp = tmp->parent;
                 }
@@ -122,13 +125,13 @@ namespace ft {
         ~BidIt() {};
     };
 
-    template<typename T>
-    bool operator== (const BidIt<T> &left, const BidIt<T> &right) {
+    template<typename K, typename V, typename Pt, typename Rt, typename Dtype>
+    bool operator== (iterator<bidirectional_iterator_tag, node<const K, V>, Pt, Rt, Dtype> &left, iterator<bidirectional_iterator_tag, node<const K, V>, Pt, Rt, Dtype> &right) {
         return left.operator==(right);
     }
 
-    template<typename T>
-    bool operator!= (const BidIt<T> &left, const BidIt<T> &right) {
+    template<typename K, typename V, typename Pt, typename Rt, typename Dtype>
+    bool operator!= (iterator<bidirectional_iterator_tag, node<const K, V>, Pt, Rt, Dtype> &left, iterator<bidirectional_iterator_tag, node<const K, V>, Pt, Rt, Dtype> &right) {
         return !(left.operator==(right));
     }
 

@@ -7,6 +7,7 @@
 template <class K, class V>
 struct node {
     typedef ft::pair<const K, V>    value_type;
+//    typedef node<const K, V>        node_type;
     bool                            isred;
     bool                            isnil;
     node                            *left;

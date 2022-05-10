@@ -27,9 +27,7 @@ namespace ft {
             _current = NULL;
         }
 
-        explicit reverse_iterator(RandIt x) {
-            _current = x;
-        }
+        explicit reverse_iterator(RandIt x) : _current(x) {}
 
         template<class U>
         reverse_iterator(const reverse_iterator<U> &x) {

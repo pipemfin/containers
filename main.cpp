@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <map>
 #include "map.hpp"
 #include "vector.hpp"
 //#include "stack.hpp"
@@ -462,5 +463,13 @@ int main()
 {
     ft::map<int, int> mymap;
 
+    mymap.begin();
+    mymap.end();
+    mymap.rbegin();
+    mymap.rend();
+    ft::pair<const int, int> abc(1, 1);
+    mymap.insert(abc);
+    std::cout << abc.first << std::endl;
+//    mymap.end();
     std::cout << mymap.size() << std::endl;
 }
