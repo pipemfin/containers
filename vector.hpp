@@ -23,7 +23,7 @@ namespace ft {
         typedef typename allocator_type::reference                                      reference;
         typedef typename allocator_type::const_reference                                const_reference;
         typedef typename ft::RandIt<T, pointer, reference, difference_type>             iterator;
-        typedef typename ft::RandIt<T, const_pointer, const_reference, difference_type> const_iterator;
+        typedef typename ft::RandIt<T   , const_pointer, const_reference, difference_type> const_iterator;
         typedef typename ft::reverse_iterator<iterator>                                 reverse_iterator;
         typedef const typename ft::reverse_iterator<const_iterator>                     const_reverse_iterator;
 

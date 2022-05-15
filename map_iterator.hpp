@@ -2,15 +2,16 @@
 #define MAP_ITERATOR_HPP
 
 #include "iterator.hpp"
+#include "utils.hpp"
 #include "node.hpp"
 #include <iostream>
 
 namespace ft {
     template<typename K, typename V, typename Pt, typename Rt, typename Dtype>
-class BidIt : public iterator<bidirectional_iterator_tag, node<const K, V>, Dtype, Pt, Rt> {
+class BidIt : public iterator<bidirectional_iterator_tag, node<K, V>, Dtype, Pt, Rt> {
     public:
-        typedef node<const K, V>                                                    Node;
-        typedef BidIt<bidirectional_iterator_tag, node<const K, V>, Pt, Rt, Dtype>  iterator;
+        typedef node<K, V>                                                          Node;
+        typedef BidIt<bidirectional_iterator_tag, Node, Pt, Rt, Dtype>              iterator;
 //        typedef typename iterator::iterator_category                                iterator_category;
 //        typedef typename Iterator::value_type                                       value_type;
 //        typedef typename Iterator::difference_type                                  difference_type;
@@ -18,20 +19,14 @@ class BidIt : public iterator<bidirectional_iterator_tag, node<const K, V>, Dtyp
 //        typedef typename Iterator::reference                                        reference;
 
     private:
-        node<const K, V> *_node;
+        Node    *_node;
 
     public:
-        BidIt() {
-            _node = NULL;
-        }
+        BidIt() : _node(NULL) {}
 
-        BidIt(const BidIt &iter) {
-            _node = iter._node;
-        }
+        BidIt(const BidIt &iter) : _node(iter._node) {}
 
-        BidIt(Node *node) {
-            _node = node;
-        }
+        BidIt(Node *node) : _node(node) {}
 
         Node& operator=(const BidIt &iter) {
             if (this == &iter) {
@@ -87,8 +82,9 @@ class BidIt : public iterator<bidirectional_iterator_tag, node<const K, V>, Dtyp
         }
 
         Node* minimum(Node* node) {
+            std::cout << "1" << std::endl;
             for ( ; !node->left->isnil; node = node->left)
-                ;
+                std::cout << "2" << std::endl;;
             return node;
         }
 

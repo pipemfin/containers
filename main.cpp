@@ -459,17 +459,59 @@ public:
 ////    }
 //}
 
+//int main()
+//{
+//    ft::map<int, int> mymap;
+//
+//    mymap.begin();
+//    mymap.end();
+//    mymap.rbegin();
+//    mymap.rend();
+//    ft::pair<const int, int> abc(1, 1);
+//    mymap.insert(abc);
+//    std::cout << abc.first << std::endl;
+////    mymap.end();
+//    std::cout << mymap.size() << std::endl;
+//}
+
 int main()
 {
-    ft::map<int, int> mymap;
+    int a = 3;
+
+    std::map<char, int> mymap;
 
     mymap.begin();
     mymap.end();
     mymap.rbegin();
     mymap.rend();
-    ft::pair<const int, int> abc(1, 1);
-    mymap.insert(abc);
-    std::cout << abc.first << std::endl;
-//    mymap.end();
-    std::cout << mymap.size() << std::endl;
+    std::pair<char, int> f1('a', 3);
+    std::pair<char, int> f2('b', 1);
+//    std::pair<char, int> f3('c', 2);
+    std::pair<char, int> f4('d', 4);
+    std::pair<char, int> f5('e', 5);
+
+//    std::cout << mymap._root->left << std::endl;
+    std::cout << "before 1 insert" << std::endl;
+    mymap.insert(f1);
+    std::cout << "after 1 insert" << std::endl;
+    mymap.insert(f2);
+    std::cout << "after 2 insert" << std::endl;
+    mymap.insert(f5);
+    std::cout << "after 3 insert" << std::endl;
+    mymap.insert(f4);
+    std::cout << "after 4 insert" << std::endl;
+//    std::cout << mymap._root->left << std::endl;
+//    std::cout << mymap._root->left->data->first << std::endl;
+//    std::cout << mymap._root->left->data->second << std::endl;
+//    std::cout << &(*mymap.begin()) << std::endl;
+    for (std::map<char, int>::iterator begin = mymap.begin(); begin != mymap.end(); ++begin) {
+        std::cout << "first_elem:" << begin->first << ", sec_elem:" << begin->second << std::endl;
+    }
+    std::cout << "first_elem:" << mymap.lower_bound('c')->first << std::endl;
+    std::cout << "first_elem:" << mymap.upper_bound('c')->first << std::endl;
+//    std::cout << "raz" << mymap._key_compare(1, 2);
+//    std::cout << "dva" << mymap._key_compare(2, 1);
+//    std::cout << "first_elem:" << mymap._root->left->data->first << ", sec_elem:" << mymap._root->left->data->second << std::endl;
+//    std::cout << "first_elem:" << mymap._root->left->left->data->first << ", sec_elem:" << mymap._root->left->left->data->second << std::endl;
+//    std::cout << "first_elem:" << begin->data->first << ", sec_elem:" << begin->data->second << std::endl;
 }
