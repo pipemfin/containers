@@ -174,8 +174,8 @@ namespace ft {
         }
 
         void reserve (size_type n) {
-            T* temp_ptr = NULL;
-            T* for_del = NULL;
+            T *temp_ptr = NULL;
+            T *for_del = NULL;
 
             if (n > _cpcty) {
                 size_type new_cpcty = get_new_cpcty(n, _cpcty);
@@ -192,31 +192,6 @@ namespace ft {
                 _cpcty = new_cpcty;
             }
         }
-
-//        void reserve (size_type n) {
-//            T* temp_ptr = NULL;
-//            T* for_del = NULL;
-//            size_type new_cpcty = _cpcty * 2;
-//            if (n >= _alloc.max_size()) {
-//                throw std::length_error("Index out of range");
-//            }
-//            if (n > _cpcty) {
-//                if (n > new_cpcty) {
-//                    new_cpcty = n;
-//                }
-//                temp_ptr = _alloc.allocate(new_cpcty);
-//                for (size_type cnt = 0; cnt < this->_sz; cnt++) {
-//                    _alloc.construct(&temp_ptr[cnt], _ptr[cnt]);
-//                }
-//                for_del = _ptr;
-//                _ptr = temp_ptr;
-//                for (size_type cnt = this->_sz; cnt > 0; --cnt) {
-//                    _alloc.destroy(&for_del[_sz]);
-//                }
-//                _alloc.deallocate(for_del, _cpcty);
-//                _cpcty = new_cpcty;
-//            }
-//        }
 
         const T& operator[] (size_type n) const{
             return _ptr[n];

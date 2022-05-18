@@ -30,7 +30,7 @@ namespace ft {
         typedef typename ft::BidIt<Key, Val, const_pointer, const_reference, difference_type>   const_iterator;
         typedef typename ft::reverse_iterator<iterator>                                         reverse_iterator;
         typedef const typename ft::reverse_iterator<const_iterator>                             const_reverse_iterator;
-        typedef pair<const Key, Val>                                                            value_type;
+        typedef pair<const key_type, mapped_type>                                               value_type;
         typedef node<Key, Val>                                                                  node_type;
 
     public:
@@ -101,11 +101,12 @@ namespace ft {
             return reverse_iterator(tmp.maximum(_root->left));
         }
 
-        pair<iterator,bool> insert (const pair<Key, Val> &val) {
+        pair<iterator,bool> insert (const value_type &val) {
             if (_sz == 0) {
                 node_type *new_node = new node_type(val, _root);
                 iterator for_return(new_node);
                 _root->left = new_node;
+                new_node->parent = _root;
                 ++_sz;
                 return ft::make_pair(for_return, true);
             }
@@ -132,13 +133,14 @@ namespace ft {
                 prev->right = tmp;
             else
                 prev->left = tmp;
+            tmp->parent = prev;
             ++_sz;
             iterator for_return(tmp);
 //            std::cout << "before exit" << std::endl;
             return ft::make_pair(for_return, true);
         }
 
-        iterator insert (iterator position, const pair<Key, Val> &val) {
+        iterator insert (iterator position, const value_type &val) {
             return this->insert(val).first;
         }
 
