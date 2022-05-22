@@ -5,41 +5,42 @@
 #include "iterator_traits.hpp"
 
 namespace ft {
-    template<class RandIt>
+    template<class Iterator>
     class reverse_iterator : public iterator
-            <typename iterator_traits<RandIt>::iterator_category,
-                    typename iterator_traits<RandIt>::value_type,
-                    typename iterator_traits<RandIt>::difference_type,
-                    typename iterator_traits<RandIt>::pointer,
-                    typename iterator_traits<RandIt>::reference> {
+            <typename iterator_traits<Iterator>::iterator_category,
+                    typename iterator_traits<Iterator>::value_type,
+                    typename iterator_traits<Iterator>::difference_type,
+                    typename iterator_traits<Iterator>::pointer,
+                    typename iterator_traits<Iterator>::reference> {
     private:
-        typedef typename iterator_traits<RandIt>::difference_type Dist;
-        typedef typename iterator_traits<RandIt>::pointer Ptr;
-        typedef typename iterator_traits<RandIt>::reference Ref;
+        typedef typename iterator_traits<Iterator>::difference_type Dist;
+        typedef typename iterator_traits<Iterator>::pointer Ptr;
+        typedef typename iterator_traits<Iterator>::reference Ref;
 
     protected:
-        RandIt _current;
+        Iterator _current;
 
     public:
-        typedef RandIt iterator_type;
+        typedef Iterator iterator_type;
 
         reverse_iterator() {
             _current = NULL;
         }
 
-        explicit reverse_iterator(RandIt x) : _current(x) {}
+        explicit reverse_iterator(const Iterator &x) : _current(x) {}
 
         template<class U>
         reverse_iterator(const reverse_iterator<U> &x) {
             _current = x.base();
         }
 
-        RandIt base() const {
+        Iterator base() const {
             return _current;
         }
 
-        Ref operator*() {
-            return *(_current - 1);
+        Ref operator*() const{
+            iterator_type copy(_current);
+            return *(--copy);
         }
 
         Ptr operator->() const {
@@ -52,7 +53,7 @@ namespace ft {
         }
 
         reverse_iterator operator++(int) {
-            reverse_iterator copy(this);
+            reverse_iterator copy(*this);
             --_current;
             return (copy);
         }
@@ -63,7 +64,7 @@ namespace ft {
         }
 
         reverse_iterator operator--(int) const {
-            reverse_iterator copy(this);
+            reverse_iterator copy(*this);
             ++_current;
             return copy;
         }

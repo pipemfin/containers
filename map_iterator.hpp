@@ -11,7 +11,7 @@ namespace ft {
 class BidIt : public iterator<bidirectional_iterator_tag, node<K, V>, Dtype, Pt, Rt> {
     public:
         typedef node<K, V>                                                          node;
-        typedef BidIt<bidirectional_iterator_tag, node, Pt, Rt, Dtype>              iterator;
+        typedef BidIt<bidirectional_iterator_tag, node, Dtype, Pt, Rt>              iterator;
         typedef pair<const K, V>                                                    value_type;
 //        typedef typename iterator::iterator_category                                iterator_category;
 //        typedef typename Iterator::value_type                                       value_type;
@@ -22,14 +22,32 @@ class BidIt : public iterator<bidirectional_iterator_tag, node<K, V>, Dtype, Pt,
     private:
         node    *_node;
 
+
+////        'ft::BidIt<char, int, ft::pair<const char, int> *, ft::pair<const char, int> &, long>::node *' (aka 'node<char, int> *') to
+////        'ft::BidIt<char, int, ft::pair<const char, int> *, ft::pair<const char, int> &, long>::iterator' (aka 'BidIt<ft::bidirectional_iterator_tag, node<char, int>, long, ft::pair<const char, int> *, ft::pair<const char, int> &>')
+//
+//
+//        'ft::BidIt<char, int, ft::pair<const char, int> *, ft::pair<const char, int> &, long>::node *' (aka 'node<char, int> *')
+//        'ft::BidIt<char, int, ft::pair<const char, int> *, ft::pair<const char, int> &, long>::iterator' (aka 'BidIt<ft::bidirectional_iterator_tag, node<char, int>, long, ft::pair<const char, int> *, ft::pair<const char, int> &>')
+//
+//
+//        'ft::BidIt<char, int, ft::pair<const char, int> *, ft::pair<const char, int> &, long>::iterator'
+//        (aka 'BidIt<ft::bidirectional_iterator_tag, node<char, int>, long, ft::pair<const char, int> *, ft::pair<const char, int> &>
+//        ')'
+//        ft::BidIt<char, int, ft::pair<const char, int> *, ft::pair<const char, int> &, long>::node *'
+
     public:
         BidIt() : _node(NULL) {}
 
-        BidIt(const BidIt &iter) : _node(iter._node) {}
+        BidIt(const BidIt &iter) {
+            _node = iter._node;
+        }
 
-        BidIt(node *node) : _node(node) {}
+        BidIt(node *node) {
+            _node = node;
+        }
 
-        node& operator=(const BidIt &iter) {
+        iterator& operator=(const iterator &iter) {
             if (this == &iter) {
                 return *this;
             }
@@ -57,29 +75,27 @@ class BidIt : public iterator<bidirectional_iterator_tag, node<K, V>, Dtype, Pt,
             return _node->data;
         }
 
-        //a++;
-        node* operator++() {
-            std::cout << "++operator" << std::endl;
+        //++operator
+        BidIt& operator++() {
             Next();
-            return _node;
+            return *this;
         }
 
-        node* operator++(int) {
+        //operator++
+        BidIt operator++(int) {
             node* temp = _node;
-            _node++;
+            Next();
             return temp;
         }
 
-        node* operator--() {
-            std::cout << "--operator" << std::endl;
+        BidIt& operator--() {
             Prev();
-            return _node;
+            return *this;
         }
 
-        node* operator--(int) {
+        BidIt operator--(int) {
             node* temp = _node;
-            std::cout << "operator--" << std::endl;
-            _node--;
+            Prev();
             return temp;
         }
 
@@ -97,15 +113,11 @@ class BidIt : public iterator<bidirectional_iterator_tag, node<K, V>, Dtype, Pt,
 
         void Prev() {
             if (_node == NULL) {
-                std::cout << "lol" << std::endl;
             }
             else if (!_node->left->isnil) {
-                std::cout << "first path" << std::endl;
                 _node = maximum(_node->left);
             }
             else {
-                std::cout << "second path" << std::endl;
-                std::cout << "parent node data=" << _node->parent << std::endl;
                 node* tmp = _node->parent;
                 while (!tmp->isnil && _node == tmp->left) {
                     _node = tmp;
@@ -117,15 +129,11 @@ class BidIt : public iterator<bidirectional_iterator_tag, node<K, V>, Dtype, Pt,
 
         void Next() {
             if (_node == NULL || _node->isnil) {
-                std::cout << "lol" << std::endl;
             }
             else if (!_node->right->isnil) {
-                std::cout << "first path" << std::endl;
                 _node = minimum(_node->right);
             }
             else {
-                std::cout << "second path" << std::endl;
-                std::cout << "parent node data=" << _node->parent << std::endl;
                 node* tmp = _node->parent;
                 while (!tmp->isnil && _node == tmp->right) {
                     _node = tmp;

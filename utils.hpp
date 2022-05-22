@@ -109,9 +109,10 @@ namespace ft {
 
         pair() : first(), second() {}
 
-        pair(const first_type& v1, const second_type& v2) : first(v1), second(v2) {}
+        pair(const T1& v1, const T2& v2) : first(v1), second(v2) {}
 
-        pair(const pair<T1, T2>& x) : first(x.first), second(x.second) {}
+        template<class V, class W>
+        pair(const pair<V, W>& x) : first(x.first), second(x.second) {}
     };
 
     template <class T1, class T2> inline

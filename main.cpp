@@ -505,22 +505,37 @@ int main()
 //    std::cout << mymap._root->left->data->second << std::endl;
 //    std::cout << mymap._root->left->right->data->first << std::endl;
 //    std::cout << mymap._root->left->right->data->second << std::endl;
-    std::cout << mymap._root << std::endl;
+//    std::cout << mymap._root << std::endl;
 //    std::cout << mymap._root->left->right->right->data->first << std::endl;
 //    std::cout << mymap._root->left->right->right->data->second << std::endl;
 //    std::cout << mymap._root->left->right->right->left->data->first << std::endl;
 //    std::cout << mymap._root->left->right->right->left->data->second << std::endl;
 //    std::cout << &(*mymap.begin()) << std::endl;
-    std::cout << mymap.end().get_node() << std::endl;
-    ft::map<char, int>::iterator begin = --mymap.end();
-    bool boolean;
-    for (; begin != mymap.begin(); --begin) {
-        std::cout << "cycle"  << std::endl;
-        std::cout << "first_elem:" << begin->first << ", sec_elem:" << begin->second << std::endl;
-        boolean = (begin != mymap.end());
-        std::cout << "begin != mymap.end() = " << boolean << std::endl;
-    }
-    std::cout << "first_elem:" << begin->first << ", sec_elem:" << begin->second << std::endl;
+//    std::cout << mymap.end().get_node() << std::endl;
+
+//    ++begin;
+//    ft::map<char, int>::iterator begin2 = begin++;
+//    std::cout << "first_elem:" << begin2->first << ", sec_elem:" << begin2->second << std::endl;
+//    std::cout << "first_elem:" << begin->first << ", sec_elem:" << begin->second << std::endl;
+//    for (; begin != mymap.end(); ++begin) {
+//        std::cout << "first_elem:" << begin->first << ", sec_elem:" << begin->second << std::endl;
+//    }
+//    mymap.clear();
+//    std::cout << "size:" << mymap.size() << std::endl;
+//    ft::map<char, int>::iterator begin = mymap.begin();
+//    std::cout << "first_elem:" << begin->first << ", sec_elem:" << begin->second << std::endl;
+//    ft::map<char, int>::iterator begin2 = mymap.begin();
+//    for (; begin2 != mymap.end(); ++begin2) {
+//        std::cout << "first_elem:" << begin2->first << ", sec_elem:" << begin2->second << std::endl;
+//    }
+
+//    ft::map<char, int> mymap2(mymap.begin(), mymap.end());
+//    ft::map<char, int>::iterator begin2 = mymap.begin();
+//    for (; begin2 != mymap.end(); ++begin2) {
+//        std::cout << "first_elem:" << begin2->first << ", sec_elem:" << begin2->second << std::endl;
+//    }
+//    std::cout << "size:" << mymap2.size() << std::endl;
+//    std::cout << "first_elem:" << begin->first << ", sec_elem:" << begin->second << std::endl;
 //    std::cout << "first_elem:" << mymap.lower_bound('c')->first << std::endl;
 //    std::cout << "first_elem:" << mymap.upper_bound('c')->first << std::endl;
 //    std::cout << "raz" << mymap._key_compare(1, 2);

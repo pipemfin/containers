@@ -462,7 +462,6 @@ namespace ft {
     template<typename T, class allocator_type >
     bool operator<= (const vector<T,allocator_type>& lhs, const vector<T,allocator_type>& rhs) {
         return !ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end());
-
     }
     template<typename T, class allocator_type >
     bool operator>  (const vector<T,allocator_type>& lhs, const vector<T,allocator_type>& rhs) {
