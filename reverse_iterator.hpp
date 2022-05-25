@@ -55,15 +55,15 @@ namespace ft {
         reverse_iterator operator++(int) {
             reverse_iterator copy(*this);
             --_current;
-            return (copy);
+            return copy;
         }
 
-        reverse_iterator &operator--() const {
+        reverse_iterator &operator--() {
             ++_current;
             return *this;
         }
 
-        reverse_iterator operator--(int) const {
+        reverse_iterator operator--(int) {
             reverse_iterator copy(*this);
             ++_current;
             return copy;

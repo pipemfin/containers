@@ -7,11 +7,11 @@
 #include <iostream>
 
 namespace ft {
-    template<typename K, typename V, typename Pt, typename Rt, typename Dtype>
-class BidIt : public iterator<bidirectional_iterator_tag, node<K, V>, Dtype, Pt, Rt> {
+    template<typename K, typename V, typename Pt, typename Rt, typename Dtype, typename Alloc>
+class BidIt : public iterator<bidirectional_iterator_tag, node<K, V, Alloc>, Dtype, Pt, Rt> {
     public:
-        typedef node<K, V>                                                          node;
-        typedef BidIt<bidirectional_iterator_tag, node, Dtype, Pt, Rt>              iterator;
+        typedef node<K, V, Alloc>                                                   node;
+        typedef BidIt<bidirectional_iterator_tag, node, Dtype, Pt, Rt, Alloc>       iterator;
         typedef pair<const K, V>                                                    value_type;
 //        typedef typename iterator::iterator_category                                iterator_category;
 //        typedef typename Iterator::value_type                                       value_type;
@@ -21,20 +21,6 @@ class BidIt : public iterator<bidirectional_iterator_tag, node<K, V>, Dtype, Pt,
 
     private:
         node    *_node;
-
-
-////        'ft::BidIt<char, int, ft::pair<const char, int> *, ft::pair<const char, int> &, long>::node *' (aka 'node<char, int> *') to
-////        'ft::BidIt<char, int, ft::pair<const char, int> *, ft::pair<const char, int> &, long>::iterator' (aka 'BidIt<ft::bidirectional_iterator_tag, node<char, int>, long, ft::pair<const char, int> *, ft::pair<const char, int> &>')
-//
-//
-//        'ft::BidIt<char, int, ft::pair<const char, int> *, ft::pair<const char, int> &, long>::node *' (aka 'node<char, int> *')
-//        'ft::BidIt<char, int, ft::pair<const char, int> *, ft::pair<const char, int> &, long>::iterator' (aka 'BidIt<ft::bidirectional_iterator_tag, node<char, int>, long, ft::pair<const char, int> *, ft::pair<const char, int> &>')
-//
-//
-//        'ft::BidIt<char, int, ft::pair<const char, int> *, ft::pair<const char, int> &, long>::iterator'
-//        (aka 'BidIt<ft::bidirectional_iterator_tag, node<char, int>, long, ft::pair<const char, int> *, ft::pair<const char, int> &>
-//        ')'
-//        ft::BidIt<char, int, ft::pair<const char, int> *, ft::pair<const char, int> &, long>::node *'
 
     public:
         BidIt() : _node(NULL) {}

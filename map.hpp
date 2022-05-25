@@ -21,18 +21,18 @@ namespace ft {
         typedef Key key_type;
         typedef Val mapped_type;
         typedef Compare key_compare;
-        typedef typename allocator_type::size_type                                              size_type;
-        typedef typename allocator_type::difference_type                                        difference_type;
-        typedef typename allocator_type::pointer                                                pointer;
-        typedef typename allocator_type::const_pointer                                          const_pointer;
-        typedef typename allocator_type::reference                                              reference;
-        typedef typename allocator_type::const_reference                                        const_reference;
-        typedef typename ft::BidIt<Key, Val, pointer, reference, difference_type>               iterator;
-        typedef typename ft::BidIt<Key, Val, const_pointer, const_reference, difference_type>   const_iterator;
-        typedef typename ft::reverse_iterator<iterator>                                         reverse_iterator;
-        typedef const typename ft::reverse_iterator<const_iterator>                             const_reverse_iterator;
-        typedef pair<const key_type, mapped_type>                                               value_type;
-        typedef node<Key, Val>                                                                  node_type;
+        typedef typename allocator_type::size_type                                                              size_type;
+        typedef typename allocator_type::difference_type                                                        difference_type;
+        typedef typename allocator_type::pointer                                                                pointer;
+        typedef typename allocator_type::const_pointer                                                          const_pointer;
+        typedef typename allocator_type::reference                                                              reference;
+        typedef typename allocator_type::const_reference                                                        const_reference;
+        typedef typename ft::BidIt<Key, Val, pointer, reference, difference_type,allocator_type>                iterator;
+        typedef typename ft::BidIt<Key, Val, const_pointer, const_reference, difference_type,allocator_type>    const_iterator;
+        typedef typename ft::reverse_iterator<iterator>                                                         reverse_iterator;
+        typedef const typename ft::reverse_iterator<const_iterator>                                             const_reverse_iterator;
+        typedef pair<const key_type, mapped_type>                                                               value_type;
+        typedef node<Key, Val, allocator_type>                                                                  node_type;
 
     public:
         size_type                          _sz;
@@ -40,7 +40,7 @@ namespace ft {
         node_type                          *_root;
         Compare                            _key_compare;
 
-        explicit map(const Compare& comp = Compare(), const allocator_type& alloc = allocator_type()) {
+        explicit map(const Compare& comp = Compare(), const allocator_type& alloc = allocator_type()) : _root(NULL) {
             _sz = 0;
             _root = new node_type();
             _alloc = alloc;
@@ -48,7 +48,7 @@ namespace ft {
         }
 
         template <class InputIterator>
-        map (InputIterator first, InputIterator last, const Compare& comp = Compare(), const allocator_type& alloc = allocator_type()) {
+        map (InputIterator first, InputIterator last, const Compare& comp = Compare(), const allocator_type& alloc = allocator_type()) : _root(NULL) {
             _sz = 0;
             _root = new node_type();
             _alloc = alloc;
@@ -249,7 +249,7 @@ namespace ft {
         }
 
         value_compare value_comp() const {
-            return value_comp();
+            return value_comp(Compare());
         }
 
         mapped_type& at (const key_type& k){
@@ -303,16 +303,18 @@ namespace ft {
                 y->left = z->left;
                 y->left->parent = y;
             }
-//            _alloc.destroy(z);
-//            _alloc.deallocate(z, 1);
+            delete z;
             --_sz;
         }
 
         size_type erase (const key_type& k) {
             iterator elem = this->find(k);
-            if (elem != end())
+            if (elem != end()) {
                 erase(elem);
-            return 1;
+                return 1;
+            }
+            return 0;
+
         }
 
         void erase (iterator first, iterator last) {
@@ -343,12 +345,24 @@ namespace ft {
 
         }
 
+        map& operator= (const map& x) {
+            if (this == &x)
+                return *this;
+            if (_sz)
+                clear();
+            if (x.size())
+                insert(x.begin(), x.end());
+            return *this;
+        }
+
         mapped_type& operator[] (const key_type& k) {
             return (*((this->insert(make_pair(k,mapped_type()))).first)).second;
         }
 
         ~map() {
             clear();
+            if (_root)
+                delete _root;
         }
     };
 
@@ -369,17 +383,17 @@ namespace ft {
 
     template <class Key, class T, class Compare, class Alloc>
     bool operator<= ( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs ) {
-        return !(rhs<lhs);
+        return !ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end());
     }
 
     template <class Key, class T, class Compare, class Alloc>
     bool operator>  ( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs ) {
-        return (rhs<lhs);
+        return ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end());
     }
 
     template <class Key, class T, class Compare, class Alloc>
     bool operator>= ( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs ) {
-        return !(lhs<rhs);
+        return !ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
     }
 
 
