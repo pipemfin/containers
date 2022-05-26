@@ -19,14 +19,15 @@ class BidIt : public iterator<bidirectional_iterator_tag, node<K, V, Alloc>, Dty
 //        typedef typename Iterator::pointer                                          pointer;
 //        typedef typename Iterator::reference                                        reference;
 
-    private:
+    protected:
         node    *_node;
 
     public:
         BidIt() : _node(NULL) {}
 
-        BidIt(const BidIt &iter) {
-            _node = iter._node;
+        template<typename Pt1, typename Rt1, typename Dtype1, typename Alloc1>
+        BidIt(const BidIt<K, V, Pt1, Rt1, Dtype1, Alloc1> &iter) {
+            _node = iter.get_node();
         }
 
         BidIt(node *node) {
@@ -53,11 +54,11 @@ class BidIt : public iterator<bidirectional_iterator_tag, node<K, V, Alloc>, Dty
             return *_node->data;
         }
 
-        node *get_node() {
+        node *get_node() const {
             return _node;
         }
 
-        value_type* operator->() {
+        value_type* operator->() const {
             return _node->data;
         }
 

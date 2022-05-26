@@ -323,26 +323,121 @@ namespace ft {
             }
         }
 
-        pair<const_iterator,const_iterator> equal_range (const key_type& k) const {
-//            if (_sz == 0)
-//                return this->end();
-//            node_type *start = _root->left;
-//            while (!start->isnil) {
-//                if (_key_compare(start->data->first, k)) {
-//                    start = start->right;
-//                }
-//                else if (_key_compare(k, start->data->first)) {
-//                    start = start->left;
-//                }
-//                else {
-//                    return pair(iterator(start), iterator(start));
-//                }
-//            }
-//            return this->end();
+        //первый элемент, который больше или равен искомого
+        iterator lower_bound (const key_type& k) {
+            if (_sz == 0)
+                return end();
+            node_type *start = _root->left;
+            node_type *prev = _root;
+            while (!start->isnil) {
+                if (_key_compare(start->data->first, k)) {
+                    start = start->right;
+                }
+                else {
+                    prev = start;
+                    start = start->left;
+                }
+            }
+            return iterator(prev);
         }
 
-        pair<iterator,iterator>             equal_range (const key_type& k) {
+        const_iterator lower_bound (const key_type& k) const {
+            if (_sz == 0)
+                return end();
+            node_type *start = _root->left;
+            node_type *prev = _root;
+            while (!start->isnil) {
+                if (_key_compare(start->data->first, k)) {
+                    start = start->right;
+                }
+                else {
+                    prev = start;
+                    start = start->left;
+                }
+            }
+            return const_iterator(prev);
+        }
 
+        iterator upper_bound (const key_type& k) {
+            if (_sz == 0)
+                return end();
+            node_type *start = _root->left;
+            node_type *prev = _root;
+            while (!start->isnil) {
+                if (_key_compare(k, start->data->first)) {
+                    prev = start;
+                    start = start->left;
+                }
+                else {
+                    start = start->right;
+                }
+            }
+            return iterator(prev);
+        }
+
+        const_iterator upper_bound (const key_type& k) const {
+            if (_sz == 0)
+                return end();
+            node_type *start = _root->left;
+            node_type *prev = _root;
+            while (!start->isnil) {
+                if (_key_compare(k, start->data->first)) {
+                    prev = start;
+                    start = start->left;
+                }
+                else {
+                    start = start->right;
+                }
+            }
+            return const_iterator(prev);
+        }
+
+        ft::pair<iterator,iterator> equal_range(const key_type& k) {
+            return ft::pair<iterator, iterator>(lower_bound(k), upper_bound(k));
+//            if (_sz == 0) {
+//                std::cout << "1" <<std::endl;
+//                return ft::make_pair(iterator(_root), iterator(_root));
+//            }
+//            node_type *start = _root->left;
+//            node_type *prev = _root;
+//            while (!start->isnil) {
+//                if (_key_compare(k, start->data->first)) {
+//                    prev = start;
+//                    start = start->left;
+//                }
+//                else if (_key_compare(start->data->first, k)) {
+//
+//                    start = start->right;
+//                }
+//                else {
+//                    std::cout << "1" <<std::endl;
+//                    return ft::make_pair(iterator(prev), iterator(prev));
+//                }
+//            }
+//            std::cout << "1" <<std::endl;
+//            return ft::make_pair(iterator(prev), iterator(prev));
+        }
+
+        ft::pair<const_iterator,const_iterator> equal_range(const key_type& k) const {
+            return ft::pair<const_iterator, const_iterator>(lower_bound(k), upper_bound(k));
+//            if (_sz == 0)
+//                return ft::make_pair(const_iterator(_root), const_iterator(_root));
+//            node_type *start = _root->left;
+//            node_type *prev = _root;
+//            while (!start->isnil) {
+//                if (_key_compare(k, start->data->first)) {
+//                    prev = start;
+//                    start = start->left;
+//                }
+//                else if (_key_compare(start->data->first, k)) {
+//
+//                    start = start->right;
+//                }
+//                else {
+//                    return ft::make_pair(const_iterator(prev), const_iterator(prev));
+//                }
+//            }
+//            return ft::make_pair(const_iterator(prev), const_iterator(prev));
         }
 
         map& operator= (const map& x) {
@@ -395,7 +490,6 @@ namespace ft {
     bool operator>= ( const map<Key,T,Compare,Alloc>& lhs, const map<Key,T,Compare,Alloc>& rhs ) {
         return !ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
     }
-
 
     template <class Key, class T, class Compare, class Alloc>
     void swap (map<Key,T,Compare,Alloc>& x, map<Key,T,Compare,Alloc>& y) {

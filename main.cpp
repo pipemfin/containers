@@ -474,32 +474,32 @@ public:
 //    std::cout << mymap.size() << std::endl;
 //}
 
-int main()
-{
-    int a = 3;
-
-    ft::map<char, int> mymap;
-
-    mymap.begin();
-    mymap.end();
-    mymap.rbegin();
-    mymap.rend();
-    ft::pair<char, int> f1('a', 3);
-    ft::pair<char, int> f2('b', 1);
-//    std::pair<char, int> f3('c', 2);
-    ft::pair<char, int> f4('d', 4);
-    ft::pair<char, int> f5('e', 5);
-
-//    std::cout << mymap._root->left << std::endl;
-    std::cout << "before 1 insert" << std::endl;
-    mymap.insert(f1);
-    std::cout << "after 1 insert" << std::endl;
-    mymap.insert(f2);
-    std::cout << "after 2 insert" << std::endl;
-    mymap.insert(f5);
-    std::cout << "after 3 insert" << std::endl;
-    mymap.insert(f4);
-    std::cout << "after 4 insert" << std::endl;
+//int main()
+//{
+//    int a = 3;
+//
+//    ft::map<char, int> mymap;
+//
+//    mymap.begin();
+//    mymap.end();
+//    mymap.rbegin();
+//    mymap.rend();
+//    ft::pair<char, int> f1('a', 3);
+//    ft::pair<char, int> f2('b', 1);
+////    std::pair<char, int> f3('c', 2);
+//    ft::pair<char, int> f4('d', 4);
+//    ft::pair<char, int> f5('e', 5);
+//
+////    std::cout << mymap._root->left << std::endl;
+//    std::cout << "before 1 insert" << std::endl;
+//    mymap.insert(f1);
+//    std::cout << "after 1 insert" << std::endl;
+//    mymap.insert(f2);
+//    std::cout << "after 2 insert" << std::endl;
+//    mymap.insert(f5);
+//    std::cout << "after 3 insert" << std::endl;
+//    mymap.insert(f4);
+//    std::cout << "after 4 insert" << std::endl;
 //    std::cout << mymap._root->left << std::endl;
 //    std::cout << mymap._root->left->data->first << std::endl;
 //    std::cout << mymap._root->left->data->second << std::endl;
@@ -543,4 +543,30 @@ int main()
 //    std::cout << "first_elem:" << mymap._root->left->data->first << ", sec_elem:" << mymap._root->left->data->second << std::endl;
 //    std::cout << "first_elem:" << mymap._root->left->left->data->first << ", sec_elem:" << mymap._root->left->left->data->second << std::endl;
 //    std::cout << "first_elem:" << begin->data->first << ", sec_elem:" << begin->data->second << std::endl;
+//}
+
+int main() {
+    ft::map<int, int> mp;
+    std::vector<int> v;
+    mp.insert(ft::make_pair(10, 10));
+    mp.insert(ft::make_pair(20, 20));
+    mp.insert(ft::make_pair(30, 30));
+    mp.insert(ft::make_pair(40, 40));
+    mp.insert(ft::make_pair(50, 50));
+    mp.insert(ft::make_pair(60, 60));
+    const ft::pair<ft::map<int, int>::const_iterator , ft::map<int, int>::const_iterator>& pair = mp.equal_range(10);
+    const ft::pair<ft::map<int, int>::const_iterator , ft::map<int, int>::const_iterator>& pair2 = mp.equal_range(11);
+    const ft::pair<ft::map<int, int>::const_iterator , ft::map<int, int>::const_iterator>& pair3 = mp.equal_range(1);
+    v.push_back(pair.first->first);
+    v.push_back(pair.first->second);
+    v.push_back(pair.second->first);
+    v.push_back(pair.second->second);
+    v.push_back(pair2.first->first);
+    v.push_back(pair2.first->second);
+    v.push_back(pair2.second->first);
+    v.push_back(pair2.second->second);
+    v.push_back(pair3.first->first);
+    v.push_back(pair3.first->second);
+    v.push_back(pair3.second->first);
+    v.push_back(pair3.second->second);
 }

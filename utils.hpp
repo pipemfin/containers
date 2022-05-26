@@ -113,6 +113,14 @@ namespace ft {
 
         template<class V, class W>
         pair(const pair<V, W>& x) : first(x.first), second(x.second) {}
+
+        pair& operator=(const pair& other) {
+            if (this == &other)
+                return *this;
+            first = other.first;
+            second = other.second;
+            return *this;
+        }
     };
 
     template <class T1, class T2> inline
