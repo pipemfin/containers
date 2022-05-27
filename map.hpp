@@ -68,15 +68,12 @@ namespace ft {
         {
             friend class map;
         protected:
-            Compare comp;
-            value_compare (Compare c) : comp(c) {}
+            key_compare _comp;
+            value_compare (key_compare comp) : _comp(comp) {}
         public:
-            typedef bool result_type;
-            typedef value_type first_argument_type;
-            typedef value_type second_argument_type;
             bool operator() (const value_type& x, const value_type& y) const
             {
-                return comp(x.first, y.first);
+                return _comp(x.first, y.first);
             }
         };
 
@@ -118,6 +115,195 @@ namespace ft {
             return const_reverse_iterator(begin());
         }
 
+
+//        void insert_fixup(node_type *x)
+//        {
+//            for (; x != _root->left && x->parent->isred;) {
+//                if (x->parent == x->parent->parent->left) {
+//                    node_type *y = x->parent->parent->right;
+//                    if (y->isred) {
+//                        x->parent->isred = false;
+//                        y->isred = false;
+//                        x->parent->parent->isred = true;
+//                        x = x->parent->parent;
+//                    } else {
+//                        if (x == x->parent->right) {
+//                            x = x->parent;
+//                            rotate_left(x);
+//                        }
+//                        x->parent->isred= false;
+//                        x->parent->parent->isred = true;
+//                        rotate_right(x->parent->parent);
+//                    }
+//                } else {
+//                    node_type *y = x->parent->parent->left;
+//                    if (y->isred) {
+//                        x->parent->isred = false;
+//                        y->isred = false;
+//                        x->parent->parent->isred = true;
+//                        x = x->parent->parent;
+//                    } else {
+//                        if (x == x->parent->left) {
+//                            x = x->parent;
+//                            rotate_right(x);
+//                        }
+//                        x->parent->isred = false;
+//                        x->parent->parent->isred = true;
+//                        rotate_left(x->parent->parent);
+//                    }
+//                }
+//            }
+//            _root->left->isred = false;
+//        }
+
+        void insert_fixup(node_type *z)
+        {
+            for (;z != _root->left && z->parent->isred && !z->parent->isnil;) {
+                std::cout << "cycle in insfixup" << std::endl;
+                if (z->parent == z->parent->parent->left) {
+                    std::cout << "1" << std::endl;
+                    node_type *y = z->parent->parent->right;
+                    std::cout << "1.1" << std::endl;
+                    if (y->isred) {
+                        std::cout << "1.1.1" << std::endl;
+                        z->parent->isred = false;
+                        y->isred = false;
+                        z->parent->parent->isred = true;
+                        z = z->parent->parent;
+                    }
+                    else if (z == z->parent->right) {
+                        std::cout << "1.1.2" << std::endl;
+                        z = z->parent;
+                        rotate_left(z);
+                    }
+                    std::cout << "1.2" << std::endl;
+                    z->parent->isred= false;
+                    z->parent->parent->isred = true;
+                    rotate_right(z->parent->parent);
+                }
+                else {
+                    std::cout << "2" << std::endl;
+                    node_type *y = z->parent->parent->left;
+                    if (y->isred) {
+                        z->parent->isred = false;
+                        y->isred = false;
+                        z->parent->parent->isred = true;
+                        z = z->parent->parent;
+                    }
+                    else if (z == z->parent->left) {
+                        z = z->parent;
+                        rotate_right(z);
+                    }
+                    z->parent->isred = false;
+                    z->parent->parent->isred = true;
+                    rotate_left(z->parent->parent);
+                }
+            }
+            _root->left->isred = false;
+        }
+
+        void delete_fixup(node_type *x)
+        {
+            for (; x != _root && !x->isred;) {
+                if (x == x->parent->left) {
+                    node_type *w = x->parent->right;
+                    if (w->isred) {
+                        w->isred = false;
+                        x->parent->isred = true;
+                        rotate_left(x->parent);
+                        w = x->parent->right;
+                    }
+                    if (!w->left->isred && !w->right->isred) {
+                        w->isred = true;
+                        x = x->parent;
+                    } else {
+                        if (!w->right->isred) {
+                            w->left->isred = false;
+                            w->isred = true;
+                            rotate_right(w);
+                            w = x->parent->right;
+                        }
+                        w->isred = x->parent->isred;
+                        x->parent->isred = false;
+                        w->right->isred = false;
+                        rotate_left(x->parent);
+                        x = _root->left;
+                    }
+                } else {
+                    node_type *w = x->parent->left;
+                    if (w->isred) {
+                        w->isred = false;
+                        x->parent->isred = true;
+                        rotate_right(x->parent);
+                        w = x->parent->left;
+                    }
+                    if (!w->right->isred && !w->left->isred) {
+                        w->isred = true;
+                        x = x->parent;
+                    } else {
+                        if (!w->left->isred) {
+                            w->right->isred = false;
+                            w->isred = true;
+                            rotate_left(w);
+                            w = x->parent->left;
+                        }
+                        w->isred = x->parent->isred;
+                        x->parent->isred = false;
+                        w->left->isred = false;
+                        rotate_right(x->parent);
+                        x = _root->left;
+                    }
+                }
+            }
+            if (!x->isnil)
+                x->isred = false;
+        }
+
+        void rotate_left(node_type *x)
+        {
+            std::cout << "start left rotate" << std::endl;
+            node_type *y = x->right;
+            x->right = y->left;
+            if (!y->left->isnil)
+                y->left->parent = x;
+            if (!y->isnil)
+                y->parent = x->parent;
+            if (x->parent->isnil) {
+                _root->left = y;
+            }
+            else if (x == x->parent->left) {
+                x->parent->left = y;
+            }
+            else {
+                x->parent->right = y;
+            }
+            y->left = x;
+            if (!x->isnil)
+                x->parent = y;
+            std::cout << "end left rotate" << std::endl;
+        }
+
+        void rotate_right(node_type *x)
+        {
+            std::cout << "start right rotate" << std::endl;
+            node_type *y = x->left;
+            x->left = y->right;
+            if (!y->right->isnil)
+                y->right->parent = x;
+            if (!y->isnil)
+                y->parent = x->parent;
+            if (x->parent->isnil)
+                _root->left = y;
+            else if (x == x->parent->right)
+                x->parent->right = y;
+            else
+                x->parent->left = y;
+            y->right = x;
+            if (!x->isnil)
+                x->parent = y;
+            std::cout << "end right rotate" << std::endl;
+        }
+
         pair<iterator,bool> insert (const value_type &val) {
             if (_sz == 0) {
                 node_type *new_node = new node_type(val, _root);
@@ -147,6 +333,9 @@ namespace ft {
             else
                 prev->left = tmp;
             tmp->parent = prev;
+            std::cout << "before insert_fixup" << std::endl;
+            insert_fixup(tmp);
+            std::cout << "after insert_fixup" << std::endl;
             ++_sz;
             iterator for_return(tmp);
             return ft::make_pair(for_return, true);
@@ -282,19 +471,29 @@ namespace ft {
         }
 
         void erase (iterator position) {
+            node_type *x;
             node_type *z = position.get_node();
+            node_type *y = position.get_node();
+            bool isred = y->isred;
             if (z->isnil){
                 return ;
             }
             if (z->left->isnil) {
+                x = z->right;
                 transplant(z, z->right);
             }
             else if (z->right->isnil) {
+                x = z->left;
                 transplant(z, z->left);
             }
             else {
                 node_type *y = position.minimum(z->right);
-                if (y->parent != z) {
+                isred = y->isred;
+                x = y->right;
+                if (y->parent == z) {
+                    x->parent = y;
+                }
+                else {
                     transplant(y, y->right);
                     y->right = z->right;
                     y->right->parent = y;
@@ -302,8 +501,11 @@ namespace ft {
                 transplant(z, y);
                 y->left = z->left;
                 y->left->parent = y;
+                y->isred = z->isred;
             }
-            delete z;
+            if (!isred)
+                delete_fixup(x);
+            delete y;
             --_sz;
         }
 
@@ -394,50 +596,10 @@ namespace ft {
 
         ft::pair<iterator,iterator> equal_range(const key_type& k) {
             return ft::pair<iterator, iterator>(lower_bound(k), upper_bound(k));
-//            if (_sz == 0) {
-//                std::cout << "1" <<std::endl;
-//                return ft::make_pair(iterator(_root), iterator(_root));
-//            }
-//            node_type *start = _root->left;
-//            node_type *prev = _root;
-//            while (!start->isnil) {
-//                if (_key_compare(k, start->data->first)) {
-//                    prev = start;
-//                    start = start->left;
-//                }
-//                else if (_key_compare(start->data->first, k)) {
-//
-//                    start = start->right;
-//                }
-//                else {
-//                    std::cout << "1" <<std::endl;
-//                    return ft::make_pair(iterator(prev), iterator(prev));
-//                }
-//            }
-//            std::cout << "1" <<std::endl;
-//            return ft::make_pair(iterator(prev), iterator(prev));
         }
 
         ft::pair<const_iterator,const_iterator> equal_range(const key_type& k) const {
             return ft::pair<const_iterator, const_iterator>(lower_bound(k), upper_bound(k));
-//            if (_sz == 0)
-//                return ft::make_pair(const_iterator(_root), const_iterator(_root));
-//            node_type *start = _root->left;
-//            node_type *prev = _root;
-//            while (!start->isnil) {
-//                if (_key_compare(k, start->data->first)) {
-//                    prev = start;
-//                    start = start->left;
-//                }
-//                else if (_key_compare(start->data->first, k)) {
-//
-//                    start = start->right;
-//                }
-//                else {
-//                    return ft::make_pair(const_iterator(prev), const_iterator(prev));
-//                }
-//            }
-//            return ft::make_pair(const_iterator(prev), const_iterator(prev));
         }
 
         map& operator= (const map& x) {
