@@ -101,6 +101,9 @@ class BidIt : public iterator<bidirectional_iterator_tag, node<K, V, Alloc>, Dty
         void Prev() {
             if (_node == NULL) {
             }
+            if (_node->isnil) {
+                _node = maximum(*_node->_root);
+            }
             else if (!_node->left->isnil) {
                 _node = maximum(_node->left);
             }

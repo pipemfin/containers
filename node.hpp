@@ -13,6 +13,7 @@ namespace ft {
         node *left;
         node *right;
         node *parent;
+        node **_root;
         value_type *data;
         Alloc alloc;
 

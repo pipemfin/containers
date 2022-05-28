@@ -38,19 +38,24 @@ namespace ft {
         size_type                          _sz;
         allocator_type                     _alloc;
         node_type                          *_root;
+        node_type                          *_nil;
         Compare                            _key_compare;
 
-        explicit map(const Compare& comp = Compare(), const allocator_type& alloc = allocator_type()) : _root(NULL) {
+        explicit map(const Compare& comp = Compare(), const allocator_type& alloc = allocator_type()) : _nil(NULL) {
             _sz = 0;
-            _root = new node_type();
+            _root = NULL;
+            _nil = new node_type();
+            _nil->_root = &_root;
             _alloc = alloc;
             _key_compare = comp;
         }
 
         template <class InputIterator>
-        map (InputIterator first, InputIterator last, const Compare& comp = Compare(), const allocator_type& alloc = allocator_type()) : _root(NULL) {
+        map (InputIterator first, InputIterator last, const Compare& comp = Compare(), const allocator_type& alloc = allocator_type()) : _nil(NULL) {
             _sz = 0;
-            _root = new node_type();
+            _root = NULL;
+            _nil = new node_type();
+            _nil->_root = &_root;
             _alloc = alloc;
             _key_compare = comp;
             insert(first, last);
@@ -58,7 +63,9 @@ namespace ft {
 
         map (const map& x) {
             _sz = 0;
-            _root = new node_type();
+            _root = NULL;
+            _nil = new node_type();
+            _nil->_root = &_root;
             _alloc = x.get_allocator();
             _key_compare = x.key_comp();
             insert(x.begin(), x.end());
@@ -78,25 +85,25 @@ namespace ft {
         };
 
         iterator begin() {
-            iterator tmp = iterator(_root);
+            iterator tmp = iterator(_nil);
             if (!_sz)
                 return tmp;
-            return tmp.minimum(_root->left);
+            return tmp.minimum(_root);
         }
 
         const_iterator begin() const {
-            const_iterator tmp = const_iterator(_root);
+            const_iterator tmp = const_iterator(_nil);
             if (!_sz)
                 return tmp;
-            return tmp.minimum(_root->left);
+            return tmp.minimum(_root);
         }
 
         iterator end() {
-            return iterator(_root);
+            return iterator(_nil);
         }
 
         const_iterator end() const {
-            return const_iterator(_root);
+            return const_iterator(_nil);
         }
 
         reverse_iterator rbegin() {
@@ -116,95 +123,51 @@ namespace ft {
         }
 
 
-//        void insert_fixup(node_type *x)
-//        {
-//            for (; x != _root->left && x->parent->isred;) {
-//                if (x->parent == x->parent->parent->left) {
-//                    node_type *y = x->parent->parent->right;
-//                    if (y->isred) {
-//                        x->parent->isred = false;
-//                        y->isred = false;
-//                        x->parent->parent->isred = true;
-//                        x = x->parent->parent;
-//                    } else {
-//                        if (x == x->parent->right) {
-//                            x = x->parent;
-//                            rotate_left(x);
-//                        }
-//                        x->parent->isred= false;
-//                        x->parent->parent->isred = true;
-//                        rotate_right(x->parent->parent);
-//                    }
-//                } else {
-//                    node_type *y = x->parent->parent->left;
-//                    if (y->isred) {
-//                        x->parent->isred = false;
-//                        y->isred = false;
-//                        x->parent->parent->isred = true;
-//                        x = x->parent->parent;
-//                    } else {
-//                        if (x == x->parent->left) {
-//                            x = x->parent;
-//                            rotate_right(x);
-//                        }
-//                        x->parent->isred = false;
-//                        x->parent->parent->isred = true;
-//                        rotate_left(x->parent->parent);
-//                    }
-//                }
-//            }
-//            _root->left->isred = false;
-//        }
-
-        void insert_fixup(node_type *z)
+        void insert_fixup(node_type *x)
         {
-            for (;z != _root->left && z->parent->isred && !z->parent->isnil;) {
-                std::cout << "cycle in insfixup" << std::endl;
-                if (z->parent == z->parent->parent->left) {
-                    std::cout << "1" << std::endl;
-                    node_type *y = z->parent->parent->right;
-                    std::cout << "1.1" << std::endl;
+            for (; x != _root && x->parent->isred;) {
+                if (x->parent == x->parent->parent->left) {
+                    node_type *y = x->parent->parent->right;
                     if (y->isred) {
-                        std::cout << "1.1.1" << std::endl;
-                        z->parent->isred = false;
+                        x->parent->isred = false;
                         y->isred = false;
-                        z->parent->parent->isred = true;
-                        z = z->parent->parent;
+                        x->parent->parent->isred = true;
+                        x = x->parent->parent;
+                    } else {
+                        if (x == x->parent->right) {
+                            x = x->parent;
+                            rotate_left(x);
+                        }
+                        x->parent->isred= false;
+                        x->parent->parent->isred = true;
+                        rotate_right(x->parent->parent);
                     }
-                    else if (z == z->parent->right) {
-                        std::cout << "1.1.2" << std::endl;
-                        z = z->parent;
-                        rotate_left(z);
-                    }
-                    std::cout << "1.2" << std::endl;
-                    z->parent->isred= false;
-                    z->parent->parent->isred = true;
-                    rotate_right(z->parent->parent);
-                }
-                else {
-                    std::cout << "2" << std::endl;
-                    node_type *y = z->parent->parent->left;
+                } else {
+                    node_type *y = x->parent->parent->left;
                     if (y->isred) {
-                        z->parent->isred = false;
+                        x->parent->isred = false;
                         y->isred = false;
-                        z->parent->parent->isred = true;
-                        z = z->parent->parent;
+                        x->parent->parent->isred = true;
+                        x = x->parent->parent;
+                    } else {
+                        if (x == x->parent->left) {
+                            x = x->parent;
+                            rotate_right(x);
+                        }
+                        x->parent->isred = false;
+                        x->parent->parent->isred = true;
+                        rotate_left(x->parent->parent);
                     }
-                    else if (z == z->parent->left) {
-                        z = z->parent;
-                        rotate_right(z);
-                    }
-                    z->parent->isred = false;
-                    z->parent->parent->isred = true;
-                    rotate_left(z->parent->parent);
                 }
             }
-            _root->left->isred = false;
+            _root->isred = false;
         }
 
         void delete_fixup(node_type *x)
         {
+            std::cout << "delete fixup" << std::endl;
             for (; x != _root && !x->isred;) {
+                std::cout << "delete fixup1" << std::endl;
                 if (x == x->parent->left) {
                     node_type *w = x->parent->right;
                     if (w->isred) {
@@ -227,7 +190,7 @@ namespace ft {
                         x->parent->isred = false;
                         w->right->isred = false;
                         rotate_left(x->parent);
-                        x = _root->left;
+                        x = _root;
                     }
                 } else {
                     node_type *w = x->parent->left;
@@ -251,7 +214,7 @@ namespace ft {
                         x->parent->isred = false;
                         w->left->isred = false;
                         rotate_right(x->parent);
-                        x = _root->left;
+                        x = _root;
                     }
                 }
             }
@@ -269,7 +232,7 @@ namespace ft {
             if (!y->isnil)
                 y->parent = x->parent;
             if (x->parent->isnil) {
-                _root->left = y;
+                _root = y;
             }
             else if (x == x->parent->left) {
                 x->parent->left = y;
@@ -293,7 +256,7 @@ namespace ft {
             if (!y->isnil)
                 y->parent = x->parent;
             if (x->parent->isnil)
-                _root->left = y;
+                _root = y;
             else if (x == x->parent->right)
                 x->parent->right = y;
             else
@@ -306,14 +269,14 @@ namespace ft {
 
         pair<iterator,bool> insert (const value_type &val) {
             if (_sz == 0) {
-                node_type *new_node = new node_type(val, _root);
+                node_type *new_node = new node_type(val, _nil);
                 iterator for_return(new_node);
-                _root->left = new_node;
-                new_node->parent = _root;
+                _root = new_node;
+                new_node->parent = _nil;
                 ++_sz;
                 return ft::make_pair(for_return, true);
             }
-            node_type *start = _root->left;
+            node_type *start = _root;
             node_type *prev = NULL;
             while (!start->isnil) {
                 prev = start;
@@ -327,15 +290,15 @@ namespace ft {
                     return ft::make_pair(iterator(start), false);
                 }
             }
-            node_type *tmp = new node_type(val, _root);
+            node_type *tmp = new node_type(val, _nil);
             if (_key_compare(prev->data->first, val.first))
                 prev->right = tmp;
             else
                 prev->left = tmp;
             tmp->parent = prev;
-            std::cout << "before insert_fixup" << std::endl;
-            insert_fixup(tmp);
-            std::cout << "after insert_fixup" << std::endl;
+//            std::cout << "before insert_fixup" << std::endl;
+//            insert_fixup(tmp);
+//            std::cout << "after insert_fixup" << std::endl;
             ++_sz;
             iterator for_return(tmp);
             return ft::make_pair(for_return, true);
@@ -359,16 +322,19 @@ namespace ft {
         void swap (map& x) {
             size_type           _sz_tmp = x._sz;
             allocator_type      _alloc_tmp = x._alloc;
+            node_type           *_nil_tmp = x._nil;
             node_type           *_root_tmp = x._root;
             Compare             _key_compare_tmp = x._key_compare;
 
             x._sz = this->_sz;
             x._alloc = this->_alloc;
+            x._nil = this->_nil;
             x._root = this->_root;
             x._key_compare = this->_key_compare;
 
             this->_sz = _sz_tmp;
             this->_alloc = _alloc_tmp;
+            this->_nil = _nil_tmp;
             this->_root = _root_tmp;
             this->_key_compare = _key_compare_tmp;
         }
@@ -392,7 +358,7 @@ namespace ft {
         iterator find (const Key& k) {
             if (_sz == 0)
                 return this->end();
-            node_type *start = _root->left;
+            node_type *start = _root;
             while (!start->isnil) {
                 if (_key_compare(start->data->first, k)) {
                     start = start->right;
@@ -410,7 +376,7 @@ namespace ft {
         const_iterator find (const Key& k) const {
             if (_sz == 0)
                 return this->end();
-            node_type *start = _root->left;
+            node_type *start = _root;
             while (start) {
                 if (_key_compare(start->data->first, k)) {
                     start = start->right;
@@ -457,7 +423,7 @@ namespace ft {
 
         void transplant (node_type *first, node_type *second) {
             if (first->parent->isnil) {
-                _root->left = second;
+                _root = second;
             }
             else if (first == first->parent->left) {
                 first->parent->left = second;
@@ -529,8 +495,8 @@ namespace ft {
         iterator lower_bound (const key_type& k) {
             if (_sz == 0)
                 return end();
-            node_type *start = _root->left;
-            node_type *prev = _root;
+            node_type *start = _root;
+            node_type *prev = _nil;
             while (!start->isnil) {
                 if (_key_compare(start->data->first, k)) {
                     start = start->right;
@@ -546,8 +512,8 @@ namespace ft {
         const_iterator lower_bound (const key_type& k) const {
             if (_sz == 0)
                 return end();
-            node_type *start = _root->left;
-            node_type *prev = _root;
+            node_type *start = _root;
+            node_type *prev = _nil;
             while (!start->isnil) {
                 if (_key_compare(start->data->first, k)) {
                     start = start->right;
@@ -563,8 +529,8 @@ namespace ft {
         iterator upper_bound (const key_type& k) {
             if (_sz == 0)
                 return end();
-            node_type *start = _root->left;
-            node_type *prev = _root;
+            node_type *start = _root;
+            node_type *prev = _nil;
             while (!start->isnil) {
                 if (_key_compare(k, start->data->first)) {
                     prev = start;
@@ -580,8 +546,8 @@ namespace ft {
         const_iterator upper_bound (const key_type& k) const {
             if (_sz == 0)
                 return end();
-            node_type *start = _root->left;
-            node_type *prev = _root;
+            node_type *start = _root;
+            node_type *prev = _nil;
             while (!start->isnil) {
                 if (_key_compare(k, start->data->first)) {
                     prev = start;
@@ -618,8 +584,8 @@ namespace ft {
 
         ~map() {
             clear();
-            if (_root)
-                delete _root;
+            if (_nil)
+                delete _nil;
         }
     };
 

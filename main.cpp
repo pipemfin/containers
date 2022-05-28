@@ -514,12 +514,12 @@ int main()
 //    std::cout << mymap.end().get_node() << std::endl;
 
 //    ++begin;
-//    ft::map<char, int>::iterator begin2 = begin++;
+    ft::map<char, int>::iterator begin = --mymap.end();
 //    std::cout << "first_elem:" << begin2->first << ", sec_elem:" << begin2->second << std::endl;
 //    std::cout << "first_elem:" << begin->first << ", sec_elem:" << begin->second << std::endl;
-//    for (; begin != mymap.end(); ++begin) {
-//        std::cout << "first_elem:" << begin->first << ", sec_elem:" << begin->second << std::endl;
-//    }
+    for (; begin != mymap.end(); --begin) {
+        std::cout << "first_elem:" << begin->first << ", sec_elem:" << begin->second << std::endl;
+    }
 //    mymap.clear();
 //    std::cout << "size:" << mymap.size() << std::endl;
 //    ft::map<char, int>::iterator begin = mymap.begin();
