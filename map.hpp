@@ -42,6 +42,7 @@ namespace ft {
         Compare                            _key_compare;
 
         explicit map(const Compare& comp = Compare(), const allocator_type& alloc = allocator_type()) : _nil(NULL) {
+//            std::cout << "default constr" << std::endl;
             _sz = 0;
             _root = NULL;
             _nil = new node_type();
@@ -52,6 +53,7 @@ namespace ft {
 
         template <class InputIterator>
         map (InputIterator first, InputIterator last, const Compare& comp = Compare(), const allocator_type& alloc = allocator_type()) : _nil(NULL) {
+//            std::cout << "insert constr" << std::endl;
             _sz = 0;
             _root = NULL;
             _nil = new node_type();
@@ -62,6 +64,7 @@ namespace ft {
         }
 
         map (const map& x) {
+//            std::cout << "copy constr" << std::endl;
             _sz = 0;
             _root = NULL;
             _nil = new node_type();
@@ -125,7 +128,7 @@ namespace ft {
 
         void insert_fixup(node_type *x)
         {
-            for (; x != _root && x->parent->isred;) {
+            for (; x->parent->isred;) {
                 if (x->parent == x->parent->parent->left) {
                     node_type *y = x->parent->parent->right;
                     if (y->isred) {
@@ -133,7 +136,8 @@ namespace ft {
                         y->isred = false;
                         x->parent->parent->isred = true;
                         x = x->parent->parent;
-                    } else {
+                    }
+                    else {
                         if (x == x->parent->right) {
                             x = x->parent;
                             rotate_left(x);
@@ -142,14 +146,16 @@ namespace ft {
                         x->parent->parent->isred = true;
                         rotate_right(x->parent->parent);
                     }
-                } else {
+                }
+                else {
                     node_type *y = x->parent->parent->left;
                     if (y->isred) {
                         x->parent->isred = false;
                         y->isred = false;
                         x->parent->parent->isred = true;
                         x = x->parent->parent;
-                    } else {
+                    }
+                    else {
                         if (x == x->parent->left) {
                             x = x->parent;
                             rotate_right(x);
@@ -163,11 +169,62 @@ namespace ft {
             _root->isred = false;
         }
 
+        pair<iterator,bool> insert (const value_type &val) {
+            if (_sz == 0) {
+                node_type *new_node = new node_type(val, _nil);
+//                std::cout << "pointer val: " << &val << std::endl;
+                iterator for_return(new_node);
+                _root = new_node;
+                new_node->parent = _nil;
+//                std::cout << "before insert_fixup" << std::endl;
+                insert_fixup(new_node);
+//                std::cout << "after insert_fixup" << std::endl;
+                ++_sz;
+                return ft::make_pair(for_return, true);
+            }
+            node_type *start = _root;
+            node_type *prev = NULL;
+            while (!start->isnil) {
+                if (val.first == start->data->first)
+                    return ft::make_pair(iterator(start), false);
+                prev = start;
+                if (_key_compare(val.first, start->data->first)) {
+                    start = start->left;
+                }
+                else {
+                    start = start->right;
+                }
+            }
+            node_type *tmp = new node_type(val, _nil);
+            if (_key_compare(val.first, prev->data->first))
+                prev->left = tmp;
+            else
+                prev->right = tmp;
+            tmp->parent = prev;
+//            std::cout << "before insert_fixup" << std::endl;
+            insert_fixup(tmp);
+//            std::cout << "after insert_fixup" << std::endl;
+            ++_sz;
+            iterator for_return(tmp);
+            return ft::make_pair(for_return, true);
+        }
+
+        iterator insert (iterator position, const value_type &val) {
+            return this->insert(val).first;
+        }
+
+        template <class InputIterator>
+        void insert (InputIterator first, InputIterator last) {
+            for (;first != last; ++first) {
+                insert(*first);
+            }
+        }
+
         void delete_fixup(node_type *x)
         {
-            std::cout << "delete fixup" << std::endl;
+//            std::cout << "delete fixup" << std::endl;
             for (; x != _root && !x->isred;) {
-                std::cout << "delete fixup1" << std::endl;
+//                std::cout << "delete fixup1" << std::endl;
                 if (x == x->parent->left) {
                     node_type *w = x->parent->right;
                     if (w->isred) {
@@ -224,13 +281,12 @@ namespace ft {
 
         void rotate_left(node_type *x)
         {
-            std::cout << "start left rotate" << std::endl;
+//            std::cout << "start left rotate" << std::endl;
             node_type *y = x->right;
             x->right = y->left;
             if (!y->left->isnil)
                 y->left->parent = x;
-            if (!y->isnil)
-                y->parent = x->parent;
+            y->parent = x->parent;
             if (x->parent->isnil) {
                 _root = y;
             }
@@ -241,20 +297,18 @@ namespace ft {
                 x->parent->right = y;
             }
             y->left = x;
-            if (!x->isnil)
-                x->parent = y;
-            std::cout << "end left rotate" << std::endl;
+            x->parent = y;
+//            std::cout << "end left rotate" << std::endl;
         }
 
         void rotate_right(node_type *x)
         {
-            std::cout << "start right rotate" << std::endl;
+//            std::cout << "start right rotate" << std::endl;
             node_type *y = x->left;
             x->left = y->right;
             if (!y->right->isnil)
                 y->right->parent = x;
-            if (!y->isnil)
-                y->parent = x->parent;
+            y->parent = x->parent;
             if (x->parent->isnil)
                 _root = y;
             else if (x == x->parent->right)
@@ -262,56 +316,84 @@ namespace ft {
             else
                 x->parent->left = y;
             y->right = x;
-            if (!x->isnil)
-                x->parent = y;
-            std::cout << "end right rotate" << std::endl;
+            x->parent = y;
+//            std::cout << "end right rotate" << std::endl;
         }
 
-        pair<iterator,bool> insert (const value_type &val) {
-            if (_sz == 0) {
-                node_type *new_node = new node_type(val, _nil);
-                iterator for_return(new_node);
-                _root = new_node;
-                new_node->parent = _nil;
-                ++_sz;
-                return ft::make_pair(for_return, true);
+        void transplant (node_type *first, node_type *second) {
+            if (first->parent->isnil) {
+                _root = second;
             }
-            node_type *start = _root;
-            node_type *prev = NULL;
-            while (!start->isnil) {
-                prev = start;
-                if (_key_compare(start->data->first, val.first)) {
-                    start = start->right;
-                }
-                else if (_key_compare(val.first, start->data->first)) {
-                    start = start->left;
+            else if (first == first->parent->left) {
+                first->parent->left = second;
+            }
+            else {
+                first->parent->right = second;
+            }
+            second->parent = first->parent;
+        }
+
+        void erase (iterator position) {
+            node_type *x;
+            node_type *z = position.get_node();
+            node_type *y = position.get_node();
+            bool isred = y->isred;
+            if (z->isnil){
+                return ;
+            }
+            if (z->left->isnil) {
+                x = z->right;
+                transplant(z, z->right);
+            }
+            else if (z->right->isnil) {
+                x = z->left;
+                transplant(z, z->left);
+            }
+            else {
+                node_type *y = position.minimum(z->right);
+                isred = y->isred;
+                x = y->right;
+                if (y->parent == z) {
+                    x->parent = y;
                 }
                 else {
-                    return ft::make_pair(iterator(start), false);
+                    transplant(y, y->right);
+                    y->right = z->right;
+                    y->right->parent = y;
                 }
+                transplant(z, y);
+                y->left = z->left;
+                y->left->parent = y;
+                y->isred = z->isred;
             }
-            node_type *tmp = new node_type(val, _nil);
-            if (_key_compare(prev->data->first, val.first))
-                prev->right = tmp;
-            else
-                prev->left = tmp;
-            tmp->parent = prev;
-//            std::cout << "before insert_fixup" << std::endl;
-//            insert_fixup(tmp);
-//            std::cout << "after insert_fixup" << std::endl;
-            ++_sz;
-            iterator for_return(tmp);
-            return ft::make_pair(for_return, true);
+            if (!isred)
+                delete_fixup(x);
+            delete y;
+            --_sz;
         }
 
-        iterator insert (iterator position, const value_type &val) {
-            return this->insert(val).first;
+        size_type erase (const key_type& k) {
+            iterator elem = this->find(k);
+            if (elem != end()) {
+                erase(elem);
+                return 1;
+            }
+            return 0;
+
         }
 
-        template <class InputIterator>
-        void insert (InputIterator first, InputIterator last) {
-            for (;first != last; ++first) {
-                insert(*first);
+        void erase (iterator first, iterator last) {
+//            std::cout << "erase clear" << std::endl;
+//            int i = 0;
+//            int size_z = size();
+//            std::cout << "size" << size() << std::endl;
+            iterator tmp;
+            for (; first != last; ) {
+                tmp = first;
+                first++;
+//                ++i;
+//                std::cout << "size" << size_z << " erase elem" << i << std::endl;
+                erase(tmp);
             }
         }
 
@@ -421,76 +503,6 @@ namespace ft {
             return element->second;
         }
 
-        void transplant (node_type *first, node_type *second) {
-            if (first->parent->isnil) {
-                _root = second;
-            }
-            else if (first == first->parent->left) {
-                first->parent->left = second;
-            }
-            else {
-                first->parent->right = second;
-            }
-            if (!second->isnil) {
-                second->parent = first->parent;
-            }
-        }
-
-        void erase (iterator position) {
-            node_type *x;
-            node_type *z = position.get_node();
-            node_type *y = position.get_node();
-            bool isred = y->isred;
-            if (z->isnil){
-                return ;
-            }
-            if (z->left->isnil) {
-                x = z->right;
-                transplant(z, z->right);
-            }
-            else if (z->right->isnil) {
-                x = z->left;
-                transplant(z, z->left);
-            }
-            else {
-                node_type *y = position.minimum(z->right);
-                isred = y->isred;
-                x = y->right;
-                if (y->parent == z) {
-                    x->parent = y;
-                }
-                else {
-                    transplant(y, y->right);
-                    y->right = z->right;
-                    y->right->parent = y;
-                }
-                transplant(z, y);
-                y->left = z->left;
-                y->left->parent = y;
-                y->isred = z->isred;
-            }
-            if (!isred)
-                delete_fixup(x);
-            delete y;
-            --_sz;
-        }
-
-        size_type erase (const key_type& k) {
-            iterator elem = this->find(k);
-            if (elem != end()) {
-                erase(elem);
-                return 1;
-            }
-            return 0;
-
-        }
-
-        void erase (iterator first, iterator last) {
-            for (; first != last; ++first) {
-                erase(first);
-            }
-        }
-
         //первый элемент, который больше или равен искомого
         iterator lower_bound (const key_type& k) {
             if (_sz == 0)
@@ -569,6 +581,7 @@ namespace ft {
         }
 
         map& operator= (const map& x) {
+//            std::cout << "operator=" << std::endl;
             if (this == &x)
                 return *this;
             if (_sz)
@@ -583,9 +596,14 @@ namespace ft {
         }
 
         ~map() {
+//            std::cout << "destruct" << std::endl;
             clear();
-            if (_nil)
+//            std::cout << "desctruct afterclear" << std::endl;
+            if (_nil) {
+////                std::cout << "delclear" << std::endl;
                 delete _nil;
+            }
+//            std::cout << "endclear" << std::endl;
         }
     };
 
